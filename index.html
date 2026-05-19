@@ -1,0 +1,1664 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="郑舒予的 AI 产品经理求职主页，展示 AI 产品、解决方案、数据分析与项目交付经历。"
+    />
+    <title>郑舒予 | AI 产品经理</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #f7f5ef;
+        --surface: #ffffff;
+        --surface-muted: #eef4f2;
+        --ink: #202426;
+        --muted: #64706f;
+        --line: #d8dedb;
+        --accent: #176b5b;
+        --accent-dark: #0f4e43;
+        --accent-soft: #dcebe6;
+        --warm: #c47a42;
+        --shadow: 0 22px 60px rgba(32, 36, 38, 0.1);
+        --radius: 8px;
+        --max: 1120px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        background:
+          linear-gradient(180deg, rgba(238, 244, 242, 0.9), transparent 360px),
+          var(--bg);
+        color: var(--ink);
+        font-family:
+          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+          "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
+          sans-serif;
+        line-height: 1.6;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      button,
+      a {
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      .site-header {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        border-bottom: 1px solid rgba(216, 222, 219, 0.72);
+        background: rgba(247, 245, 239, 0.88);
+        backdrop-filter: blur(18px);
+      }
+
+      .nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+        width: min(100% - 32px, var(--max));
+        min-height: 72px;
+        margin: 0 auto;
+      }
+
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        min-width: 0;
+        font-weight: 760;
+      }
+
+      .brand-mark {
+        display: grid;
+        width: 40px;
+        height: 40px;
+        flex: 0 0 40px;
+        place-items: center;
+        border: 1px solid var(--line);
+        border-radius: 50%;
+        background: var(--surface);
+        color: var(--accent);
+        font-size: 0.9rem;
+        box-shadow: 0 10px 24px rgba(23, 107, 91, 0.1);
+      }
+
+      .brand-text {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .nav-actions {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        color: var(--muted);
+        font-size: 0.94rem;
+      }
+
+      .nav-links a {
+        transition:
+          color 160ms ease,
+          transform 160ms ease;
+      }
+
+      .nav-links a:hover {
+        color: var(--accent-dark);
+      }
+
+      .lang-toggle {
+        display: inline-grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2px;
+        padding: 3px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        background: var(--surface);
+      }
+
+      .lang-toggle button {
+        min-width: 44px;
+        min-height: 32px;
+        border: 0;
+        border-radius: 999px;
+        background: transparent;
+        color: var(--muted);
+        cursor: pointer;
+        font: inherit;
+        font-size: 0.82rem;
+        font-weight: 700;
+      }
+
+      .lang-toggle button[aria-pressed="true"] {
+        background: var(--accent);
+        color: white;
+      }
+
+      main {
+        overflow: hidden;
+      }
+
+      .hero {
+        display: grid;
+        grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
+        gap: 52px;
+        align-items: center;
+        width: min(100% - 32px, var(--max));
+        min-height: calc(100vh - 72px);
+        margin: 0 auto;
+        padding: 64px 0 72px;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        margin: 0 0 20px;
+        color: var(--accent-dark);
+        font-size: 0.9rem;
+        font-weight: 760;
+      }
+
+      .eyebrow::before {
+        width: 34px;
+        height: 2px;
+        background: var(--warm);
+        content: "";
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin-top: 0;
+      }
+
+      h1 {
+        max-width: 740px;
+        margin-bottom: 22px;
+        font-size: clamp(2.5rem, 6vw, 5.75rem);
+        line-height: 0.97;
+        letter-spacing: 0;
+      }
+
+      .lead {
+        max-width: 650px;
+        margin-bottom: 30px;
+        color: var(--muted);
+        font-size: clamp(1.05rem, 2vw, 1.28rem);
+      }
+
+      .hero-actions,
+      .social-row,
+      .card-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        align-items: center;
+      }
+
+      .button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 44px;
+        padding: 0 18px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        background: var(--surface);
+        color: var(--ink);
+        font-weight: 760;
+        transition:
+          border-color 160ms ease,
+          background 160ms ease,
+          color 160ms ease,
+          transform 160ms ease;
+      }
+
+      .button.primary {
+        border-color: var(--accent);
+        background: var(--accent);
+        color: white;
+      }
+
+      .button:hover {
+        transform: translateY(-1px);
+        border-color: var(--accent);
+        color: var(--accent-dark);
+      }
+
+      .button.primary:hover {
+        background: var(--accent-dark);
+        color: white;
+      }
+
+      .social-row {
+        margin-top: 28px;
+      }
+
+      .social-row a {
+        color: var(--muted);
+        font-size: 0.94rem;
+        font-weight: 700;
+      }
+
+      .social-row a:hover {
+        color: var(--accent-dark);
+      }
+
+      .backend-strip {
+        display: inline-flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+        margin-top: 22px;
+        padding: 10px 12px;
+        border: 1px solid rgba(23, 107, 91, 0.18);
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.72);
+        color: var(--muted);
+        font-size: 0.9rem;
+        font-weight: 700;
+      }
+
+      .backend-strip strong {
+        color: var(--accent-dark);
+      }
+
+      .portrait-wrap {
+        position: relative;
+        justify-self: end;
+        width: min(100%, 430px);
+      }
+
+      .portrait-card {
+        position: relative;
+        overflow: hidden;
+        min-height: 520px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background:
+          linear-gradient(145deg, rgba(23, 107, 91, 0.18), transparent 45%),
+          var(--surface);
+        box-shadow: var(--shadow);
+      }
+
+      .portrait-visual {
+        position: absolute;
+        top: 24px;
+        left: 50%;
+        width: min(72%, 292px);
+        aspect-ratio: 3 / 4;
+        transform: translateX(-50%);
+        overflow: hidden;
+        border-radius: 8px;
+        background:
+          linear-gradient(135deg, rgba(220, 235, 230, 0.72), rgba(255, 247, 234, 0.78)),
+          #ffffff;
+      }
+
+      .profile-photo {
+        width: 100%;
+        height: 100%;
+        display: block;
+        object-fit: contain;
+        object-position: center;
+      }
+
+      .status-panel {
+        position: absolute;
+        right: 24px;
+        bottom: 24px;
+        left: 24px;
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 16px;
+        align-items: end;
+        padding: 18px;
+        border: 1px solid rgba(216, 222, 219, 0.92);
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.9);
+      }
+
+      .status-panel p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 0.92rem;
+      }
+
+      .status-panel strong {
+        display: block;
+        margin-bottom: 2px;
+        color: var(--ink);
+        font-size: 1.08rem;
+      }
+
+      .availability {
+        min-width: 94px;
+        padding: 7px 10px;
+        border-radius: 999px;
+        background: var(--accent-soft);
+        color: var(--accent-dark);
+        font-size: 0.8rem;
+        font-weight: 800;
+        text-align: center;
+      }
+
+      section {
+        width: min(100% - 32px, var(--max));
+        margin: 0 auto;
+        padding: 76px 0;
+      }
+
+      .section-head {
+        display: grid;
+        grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+        gap: 36px;
+        align-items: start;
+        margin-bottom: 34px;
+      }
+
+      .section-kicker {
+        color: var(--accent-dark);
+        font-size: 0.88rem;
+        font-weight: 820;
+        text-transform: uppercase;
+      }
+
+      h2 {
+        margin-bottom: 0;
+        font-size: clamp(1.8rem, 3.4vw, 3.25rem);
+        line-height: 1.08;
+        letter-spacing: 0;
+      }
+
+      .section-head p {
+        margin-bottom: 0;
+        color: var(--muted);
+        font-size: 1.05rem;
+      }
+
+      .about-grid {
+        display: grid;
+        grid-template-columns: 1.4fr 0.6fr;
+        gap: 20px;
+      }
+
+      .text-panel,
+      .metric-card,
+      .project-card,
+      .timeline-item,
+      .contact-panel {
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        background: var(--surface);
+      }
+
+      .text-panel {
+        padding: 30px;
+      }
+
+      .text-panel p:last-child {
+        margin-bottom: 0;
+      }
+
+      .metrics {
+        display: grid;
+        gap: 14px;
+      }
+
+      .metric-card {
+        padding: 22px;
+      }
+
+      .metric-card strong {
+        display: block;
+        color: var(--accent-dark);
+        font-size: clamp(1.7rem, 4vw, 2.5rem);
+        line-height: 1;
+      }
+
+      .metric-card span {
+        display: block;
+        margin-top: 8px;
+        color: var(--muted);
+        font-size: 0.94rem;
+      }
+
+      .skills-grid,
+      .works-grid,
+      .projects-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 18px;
+      }
+
+      .skill-group {
+        min-height: 220px;
+        padding: 24px;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        background: var(--surface-muted);
+      }
+
+      .skill-group h3,
+      .project-card h3,
+      .timeline-item h3 {
+        margin-bottom: 10px;
+        font-size: 1.08rem;
+      }
+
+      .skill-list,
+      .tag-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin: 18px 0 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .skill-list li,
+      .tag-list li {
+        padding: 6px 10px;
+        border: 1px solid rgba(23, 107, 91, 0.16);
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.74);
+        color: var(--accent-dark);
+        font-size: 0.84rem;
+        font-weight: 720;
+      }
+
+      .work-card,
+      .project-card {
+        display: flex;
+        min-height: 340px;
+        flex-direction: column;
+        padding: 24px;
+      }
+
+      .work-card {
+        min-height: 520px;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        background: var(--surface);
+      }
+
+      .project-card p,
+      .work-card p,
+      .timeline-item p {
+        color: var(--muted);
+      }
+
+      .project-meta {
+        margin: 0 0 16px;
+        color: var(--warm);
+        font-size: 0.84rem;
+        font-weight: 820;
+        text-transform: uppercase;
+      }
+
+      .project-card .tag-list,
+      .work-card .tag-list {
+        margin-top: auto;
+        padding-top: 20px;
+      }
+
+      .work-card .tag-list {
+        margin-top: 18px;
+        padding-top: 0;
+      }
+
+      .process-list {
+        display: grid;
+        gap: 8px;
+        margin: 18px 0 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .process-list li {
+        display: grid;
+        grid-template-columns: 74px minmax(0, 1fr);
+        gap: 10px;
+        align-items: start;
+        color: var(--muted);
+        font-size: 0.88rem;
+      }
+
+      .process-list strong {
+        color: var(--accent-dark);
+        font-size: 0.82rem;
+      }
+
+      .card-actions {
+        margin-top: 20px;
+      }
+
+      .timeline {
+        display: grid;
+        gap: 16px;
+      }
+
+      .timeline-item {
+        display: grid;
+        grid-template-columns: 190px minmax(0, 1fr);
+        gap: 28px;
+        padding: 24px;
+      }
+
+      .timeline-date {
+        color: var(--accent-dark);
+        font-size: 0.92rem;
+        font-weight: 820;
+      }
+
+      .contact-panel {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 28px;
+        align-items: center;
+        padding: 34px;
+        background:
+          linear-gradient(135deg, rgba(23, 107, 91, 0.08), transparent),
+          var(--surface);
+      }
+
+      .contact-panel h2 {
+        margin-bottom: 12px;
+      }
+
+      .contact-panel p {
+        max-width: 660px;
+        margin-bottom: 0;
+        color: var(--muted);
+      }
+
+      .contact-links {
+        display: grid;
+        gap: 10px;
+        min-width: 210px;
+      }
+
+      .contact-links a {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 12px 14px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--surface);
+        color: var(--muted);
+        font-weight: 740;
+      }
+
+      .contact-links a::after {
+        content: "↗";
+        font-size: 0.92rem;
+      }
+
+      .contact-side {
+        display: grid;
+        gap: 14px;
+        min-width: 300px;
+      }
+
+      .contact-form {
+        display: grid;
+        gap: 10px;
+        padding: 14px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.78);
+      }
+
+      .contact-form input,
+      .contact-form select,
+      .contact-form textarea {
+        width: 100%;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--surface);
+        color: var(--ink);
+        font: inherit;
+        font-size: 0.92rem;
+      }
+
+      .contact-form input,
+      .contact-form select {
+        min-height: 42px;
+        padding: 0 12px;
+      }
+
+      .contact-form textarea {
+        min-height: 92px;
+        resize: vertical;
+        padding: 10px 12px;
+      }
+
+      .form-feedback {
+        min-height: 20px;
+        color: var(--muted);
+        font-size: 0.84rem;
+      }
+
+      .work-shortcuts {
+        display: grid;
+        gap: 8px;
+        padding: 14px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--surface);
+      }
+
+      .work-shortcuts strong {
+        color: var(--accent-dark);
+        font-size: 0.9rem;
+      }
+
+      .work-shortcuts a {
+        display: block;
+        padding: 9px 10px;
+        border-radius: 8px;
+        background: var(--surface-muted);
+        color: var(--muted);
+        font-size: 0.88rem;
+        font-weight: 720;
+      }
+
+      .work-shortcuts a:hover {
+        color: var(--accent-dark);
+      }
+
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+      }
+
+      .site-footer {
+        width: min(100% - 32px, var(--max));
+        margin: 0 auto;
+        padding: 28px 0 42px;
+        border-top: 1px solid var(--line);
+        color: var(--muted);
+        font-size: 0.92rem;
+      }
+
+      @media (max-width: 900px) {
+        .nav {
+          min-height: auto;
+          padding: 14px 0;
+        }
+
+        .nav-links {
+          display: none;
+        }
+
+        .hero,
+        .section-head,
+        .about-grid,
+        .contact-panel {
+          grid-template-columns: 1fr;
+        }
+
+        .hero {
+          gap: 34px;
+          min-height: auto;
+          padding: 48px 0 58px;
+        }
+
+        .portrait-wrap {
+          justify-self: stretch;
+          width: 100%;
+        }
+
+        .portrait-card {
+          min-height: 510px;
+        }
+
+        .skills-grid,
+        .works-grid,
+        .projects-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .timeline-item {
+          grid-template-columns: 1fr;
+          gap: 8px;
+        }
+
+        .contact-links {
+          min-width: 0;
+        }
+
+        .contact-side {
+          min-width: 0;
+        }
+      }
+
+      @media (max-width: 560px) {
+        .nav {
+          width: min(100% - 24px, var(--max));
+        }
+
+        .brand-text {
+          max-width: 150px;
+        }
+
+        .hero,
+        section,
+        .site-footer {
+          width: min(100% - 24px, var(--max));
+        }
+
+        h1 {
+          font-size: clamp(2.35rem, 15vw, 4rem);
+        }
+
+        .hero-actions .button,
+        .contact-panel .button {
+          width: 100%;
+        }
+
+        .portrait-card {
+          min-height: 470px;
+        }
+
+        .portrait-visual {
+          top: 18px;
+          width: min(76%, 280px);
+        }
+
+        .status-panel {
+          right: 18px;
+          bottom: 18px;
+          left: 18px;
+          grid-template-columns: 1fr;
+        }
+
+        .text-panel,
+        .metric-card,
+        .project-card,
+        .work-card,
+        .timeline-item,
+        .contact-panel,
+        .skill-group {
+          padding: 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="nav" aria-label="Primary navigation">
+        <a class="brand" href="#top" aria-label="Back to top">
+          <span class="brand-mark">郑</span>
+          <span class="brand-text" data-i18n="brand">郑舒予</span>
+        </a>
+        <div class="nav-actions">
+          <div class="nav-links">
+            <a href="#about" data-i18n="navAbout">关于</a>
+            <a href="#skills" data-i18n="navSkills">技能</a>
+            <a href="#works" data-i18n="navWorks">作品</a>
+            <a href="#projects" data-i18n="navProjects">项目</a>
+            <a href="#contact" data-i18n="navContact">联系</a>
+          </div>
+          <div class="lang-toggle" aria-label="Language switcher">
+            <button type="button" data-lang="zh" aria-pressed="true">中</button>
+            <button type="button" data-lang="en" aria-pressed="false">EN</button>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="hero" aria-labelledby="hero-title">
+        <div>
+          <p class="eyebrow" data-i18n="heroEyebrow">B端产品经理实习 / SaaS产品方向</p>
+          <h1 id="hero-title" data-i18n="heroTitle">
+            把客户需求拆成清晰的产品方案、原型和验收标准。
+          </h1>
+          <p class="lead" data-i18n="heroLead">
+            我是郑舒予，人工智能硕士在读，软件工程本科背景。正在寻找 B 端 / 数据产品 / SaaS 产品经理实习，能支持需求调研、PRD 与版本文档、流程图和原型、测试验收及跨团队沟通。
+          </p>
+          <div class="hero-actions">
+            <a class="button primary" href="#works" data-i18n="heroPrimary">查看作品</a>
+            <a class="button" href="#contact" data-i18n="heroSecondary">联系我</a>
+          </div>
+          <div class="social-row" aria-label="Social links">
+            <a href="mailto:2717067143@qq.com" data-i18n="socialGithub">邮箱</a>
+            <a href="tel:13777882674" data-i18n="socialLinkedin">电话</a>
+            <a href="#contact" data-i18n="socialBlog">杭州</a>
+          </div>
+          <div class="backend-strip" aria-live="polite">
+            <span data-i18n="backendLabel">后端状态</span>
+            <strong id="backend-status" data-i18n="backendFallback">静态预览可用，连接本地 API 后显示访问数据</strong>
+          </div>
+        </div>
+
+        <div class="portrait-wrap" aria-label="Profile visual">
+          <div class="portrait-card">
+            <div class="portrait-visual">
+              <img
+                class="profile-photo"
+                src="profile-photo.png"
+                alt="郑舒予证件照"
+              />
+            </div>
+            <div class="status-panel">
+              <p>
+                <strong data-i18n="statusTitle">开放机会</strong>
+                <span data-i18n="statusText">产品经理实习 / 杭州 / 可立即到岗</span>
+              </p>
+              <span class="availability" data-i18n="statusBadge">可联系</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="about" aria-labelledby="about-title">
+        <div class="section-head">
+          <div>
+            <p class="section-kicker" data-i18n="aboutKicker">About</p>
+            <h2 id="about-title" data-i18n="aboutTitle">更适配 B 端产品岗位的技术型产品候选人。</h2>
+          </div>
+          <p data-i18n="aboutIntro">
+            目标岗位要求产品设计支持、需求调研、原型设计、文档撰写、测试验收和团队协作。我的履历可以对应到客户场景拆解、解决方案文档、流程推进和数据分析项目。
+          </p>
+        </div>
+        <div class="about-grid">
+          <div class="text-panel">
+            <p data-i18n="aboutBody1">
+              我有软件工程本科和人工智能硕士训练，熟悉 Python、SQL、机器学习、数据挖掘和多源数据分析，能与开发团队对齐技术边界，也能从客户视角整理业务流程和功能优先级。
+            </p>
+            <p data-i18n="aboutBody2">
+              在安泉数智和中国电信实习中，我参与行业客户需求分析、方案拆解、投标材料、实施手册、培训手册和质量保证文档输出，积累了从需求传递到项目推进的真实协作经验。
+            </p>
+          </div>
+          <div class="metrics" aria-label="Profile metrics">
+            <div class="metric-card">
+              <strong data-i18n="metricOneValue">3+</strong>
+              <span data-i18n="metricOneLabel">AI 安全行业方案参与</span>
+            </div>
+            <div class="metric-card">
+              <strong data-i18n="metricTwoValue">12</strong>
+              <span data-i18n="metricTwoLabel">份技术与交付文档</span>
+            </div>
+            <div class="metric-card">
+              <strong data-i18n="metricThreeValue">4</strong>
+              <span data-i18n="metricThreeLabel">类核心能力</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="skills" aria-labelledby="skills-title">
+        <div class="section-head">
+          <div>
+            <p class="section-kicker" data-i18n="skillsKicker">Skills</p>
+            <h2 id="skills-title" data-i18n="skillsTitle">直接对齐岗位 JD 的产品能力。</h2>
+          </div>
+          <p data-i18n="skillsIntro">
+            能力结构围绕 B 端产品经理实习的核心任务展开：需求调研、原型/流程表达、产品文档、测试验收和跨团队沟通。
+          </p>
+        </div>
+        <div class="skills-grid">
+          <article class="skill-group">
+            <h3 data-i18n="skillOneTitle">需求调研与分析</h3>
+            <p data-i18n="skillOneBody">能从客户业务场景中提炼痛点、角色、流程和功能模块，形成结构化需求材料。</p>
+            <ul class="skill-list">
+              <li data-i18n="skillOneA">用户视角</li>
+              <li data-i18n="skillOneB">客户访谈</li>
+              <li data-i18n="skillOneC">业务流程</li>
+              <li data-i18n="skillOneD">优先级判断</li>
+            </ul>
+          </article>
+          <article class="skill-group">
+            <h3 data-i18n="skillTwoTitle">原型与产品文档</h3>
+            <p data-i18n="skillTwoBody">具备流程图、功能说明、版本发布文档和解决方案文档经验，可快速补齐 Visio/Axure/墨刀类工具表达。</p>
+            <ul class="skill-list">
+              <li data-i18n="skillTwoA">User Flow</li>
+              <li data-i18n="skillTwoB">Wireframe</li>
+              <li data-i18n="skillTwoC">PRD</li>
+              <li data-i18n="skillTwoD">版本文档</li>
+            </ul>
+          </article>
+          <article class="skill-group">
+            <h3 data-i18n="skillThreeTitle">测试验收与协作</h3>
+            <p data-i18n="skillThreeBody">能参与测试用例设计、功能验收、问题跟踪和反馈收集，推动需求在设计、开发、测试、运营之间准确传递。</p>
+            <ul class="skill-list">
+              <li data-i18n="skillThreeA">测试验收</li>
+              <li data-i18n="skillThreeB">问题跟踪</li>
+              <li data-i18n="skillThreeC">反馈闭环</li>
+              <li data-i18n="skillThreeD">团队沟通</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section id="works" aria-labelledby="works-title">
+        <div class="section-head">
+          <div>
+            <p class="section-kicker" data-i18n="worksKicker">Vibe Coding</p>
+            <h2 id="works-title" data-i18n="worksTitle">用可交互作品展示产品能力。</h2>
+          </div>
+          <p data-i18n="worksIntro">
+            这组本地 Demo 针对目标岗位的 B 端产品职责设计，覆盖需求调研、原型表达、产品文档、测试验收和反馈闭环。
+          </p>
+        </div>
+        <div class="works-grid">
+          <article class="work-card">
+            <p class="project-meta" data-i18n="workOneMeta">PRD / SaaS</p>
+            <h3 data-i18n="workOneTitle">客户需求到 PRD 工作台</h3>
+            <p data-i18n="workOneBody">
+              将客户反馈、业务目标、用户故事、功能优先级和验收标准放进同一工作台，模拟产品经理从调研到文档沉淀的过程。
+            </p>
+            <ul class="tag-list">
+              <li data-i18n="workOneTagA">需求分析</li>
+              <li data-i18n="workOneTagB">PRD</li>
+              <li data-i18n="workOneTagC">优先级</li>
+            </ul>
+            <ul class="process-list">
+              <li><strong data-i18n="processPrdLabel">PRD</strong><span data-i18n="workOneProcessPrd">客户反馈池、功能范围、流程和验收标准</span></li>
+              <li><strong data-i18n="processAxureLabel">Axure</strong><span data-i18n="workOneProcessAxure">信息架构、Tab 原型、反馈录入路径</span></li>
+              <li><strong data-i18n="processBuildLabel">产出</strong><span data-i18n="workOneProcessBuild">Node API + PRD 工作台交互页面</span></li>
+              <li><strong data-i18n="processTestLabel">测试</strong><span data-i18n="workOneProcessTest">新增反馈、勾选验收、接口回写验证</span></li>
+            </ul>
+            <div class="card-actions">
+              <a class="button" href="works/requirement-workbench.html" data-i18n="workLink">打开作品</a>
+              <a class="button" href="docs/prd-requirement-workbench.html" data-i18n="prdLink">查看 PRD</a>
+            </div>
+          </article>
+          <article class="work-card">
+            <p class="project-meta" data-i18n="workTwoMeta">Prototype / B2B</p>
+            <h3 data-i18n="workTwoTitle">SaaS 运营数据看板原型</h3>
+            <p data-i18n="workTwoBody">
+              面向运营和客户成功团队，设计关键指标、异常提醒、筛选联动和客户分层，用数据产品思维支撑业务决策。
+            </p>
+            <ul class="tag-list">
+              <li data-i18n="workTwoTagA">数据产品</li>
+              <li data-i18n="workTwoTagB">原型设计</li>
+              <li data-i18n="workTwoTagC">B 端场景</li>
+            </ul>
+            <ul class="process-list">
+              <li><strong data-i18n="processPrdLabel">PRD</strong><span data-i18n="workTwoProcessPrd">指标口径、客户分层、异常跟进规则</span></li>
+              <li><strong data-i18n="processAxureLabel">Axure</strong><span data-i18n="workTwoProcessAxure">筛选器、指标卡、趋势图和列表原型</span></li>
+              <li><strong data-i18n="processBuildLabel">产出</strong><span data-i18n="workTwoProcessBuild">动态数据看板 + 跟进任务后端</span></li>
+              <li><strong data-i18n="processTestLabel">测试</strong><span data-i18n="workTwoProcessTest">筛选联动、创建跟进、数据刷新验证</span></li>
+            </ul>
+            <div class="card-actions">
+              <a class="button" href="works/saas-dashboard.html" data-i18n="workLink">打开作品</a>
+              <a class="button" href="docs/prd-saas-dashboard.html" data-i18n="prdLink">查看 PRD</a>
+            </div>
+          </article>
+          <article class="work-card">
+            <p class="project-meta" data-i18n="workThreeMeta">QA / Feedback</p>
+            <h3 data-i18n="workThreeTitle">测试验收与反馈闭环工具</h3>
+            <p data-i18n="workThreeBody">
+              模拟功能验收、问题跟踪、用户反馈收集和迭代状态管理，体现产品经理与设计、开发、测试、运营协作的基本功。
+            </p>
+            <ul class="tag-list">
+              <li data-i18n="workThreeTagA">测试验收</li>
+              <li data-i18n="workThreeTagB">问题跟踪</li>
+              <li data-i18n="workThreeTagC">迭代优化</li>
+            </ul>
+            <ul class="process-list">
+              <li><strong data-i18n="processPrdLabel">PRD</strong><span data-i18n="workThreeProcessPrd">验收清单、反馈分级、闭环状态规则</span></li>
+              <li><strong data-i18n="processAxureLabel">Axure</strong><span data-i18n="workThreeProcessAxure">清单、反馈池、状态标签和统计原型</span></li>
+              <li><strong data-i18n="processBuildLabel">产出</strong><span data-i18n="workThreeProcessBuild">验收管理工具 + 反馈写入接口</span></li>
+              <li><strong data-i18n="processTestLabel">测试</strong><span data-i18n="workThreeProcessTest">勾选状态、反馈新增、统计同步验证</span></li>
+            </ul>
+            <div class="card-actions">
+              <a class="button" href="works/acceptance-tracker.html" data-i18n="workLink">打开作品</a>
+              <a class="button" href="docs/prd-acceptance-tracker.html" data-i18n="prdLink">查看 PRD</a>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section id="projects" aria-labelledby="projects-title">
+        <div class="section-head">
+          <div>
+            <p class="section-kicker" data-i18n="projectsKicker">Projects</p>
+            <h2 id="projects-title" data-i18n="projectsTitle">能体现 AI 产品潜力的代表项目。</h2>
+          </div>
+          <p data-i18n="projectsIntro">
+            每张项目卡片预留背景、贡献、技术标签和成果指标。替换真实项目后，可以更直接体现你的能力。
+          </p>
+        </div>
+        <div class="projects-grid">
+          <article class="project-card">
+            <p class="project-meta" data-i18n="projectOneMeta">Dashboard / 2026</p>
+            <h3 data-i18n="projectOneTitle">业务数据分析看板</h3>
+            <p data-i18n="projectOneBody">
+              为运营团队设计并实现指标监控界面，支持趋势分析、筛选联动和关键异常提醒。
+            </p>
+            <p data-i18n="projectOneImpact">输出 3+ 份定制化解决方案及投标文件，沉淀 5+ 类典型业务场景与方案模板，提升团队后续响应效率。</p>
+            <ul class="tag-list">
+              <li data-i18n="projectOneTagA">React</li>
+              <li data-i18n="projectOneTagB">Charts</li>
+              <li data-i18n="projectOneTagC">UX</li>
+            </ul>
+            <div class="card-actions">
+              <a class="button" href="#contact" data-i18n="projectLink">查看详情</a>
+            </div>
+          </article>
+          <article class="project-card">
+            <p class="project-meta" data-i18n="projectTwoMeta">Platform / 2025</p>
+            <h3 data-i18n="projectTwoTitle">内容发布工作台</h3>
+            <p data-i18n="projectTwoBody">
+              梳理编辑、审核、发布流程，搭建低干扰的内容管理界面，提升多人协作效率。
+            </p>
+            <p data-i18n="projectTwoImpact">项目提前 7 天交付，完成 56 页技术方案和总决赛答辩材料，从 1053 支队伍中获得全国一等奖。</p>
+            <ul class="tag-list">
+              <li data-i18n="projectTwoTagA">Workflow</li>
+              <li data-i18n="projectTwoTagB">CMS</li>
+              <li data-i18n="projectTwoTagC">Design System</li>
+            </ul>
+            <div class="card-actions">
+              <a class="button" href="#contact" data-i18n="projectLink">查看详情</a>
+            </div>
+          </article>
+          <article class="project-card">
+            <p class="project-meta" data-i18n="projectThreeMeta">Tooling / 2024</p>
+            <h3 data-i18n="projectThreeTitle">团队效率工具</h3>
+            <p data-i18n="projectThreeBody">
+              为跨职能团队构建任务状态、资料入口和决策记录聚合页，让项目进展更透明。
+            </p>
+            <p data-i18n="projectThreeImpact">故障预警准确率达到 92%，方案预计提升轴承维护效率 30%，并在 72 小时竞赛周期内完成交付。</p>
+            <ul class="tag-list">
+              <li data-i18n="projectThreeTagA">JavaScript</li>
+              <li data-i18n="projectThreeTagB">Automation</li>
+              <li data-i18n="projectThreeTagC">Docs</li>
+            </ul>
+            <div class="card-actions">
+              <a class="button" href="#contact" data-i18n="projectLink">查看详情</a>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section id="experience" aria-labelledby="experience-title">
+        <div class="section-head">
+          <div>
+            <p class="section-kicker" data-i18n="experienceKicker">Experience</p>
+            <h2 id="experience-title" data-i18n="experienceTitle">经历结构清晰，后续替换即可。</h2>
+          </div>
+          <p data-i18n="experienceIntro">
+            用时间线呈现关键岗位、学习经历或项目阶段。首版保持克制，避免信息过载。
+          </p>
+        </div>
+        <div class="timeline">
+          <article class="timeline-item">
+            <div class="timeline-date" data-i18n="expOneDate">2025 - 至今</div>
+            <div>
+              <h3 data-i18n="expOneTitle">AI 安全解决方案工程师 / 安泉数智科技有限公司</h3>
+              <p data-i18n="expOneBody">
+                负责核心业务界面开发、组件规范维护和跨团队需求落地，参与从需求评审到上线复盘的完整流程。
+              </p>
+            </div>
+          </article>
+          <article class="timeline-item">
+            <div class="timeline-date" data-i18n="expTwoDate">2023 - 2025</div>
+            <div>
+              <h3 data-i18n="expTwoTitle">技术助理 / 中国电信股份有限公司金华分公司</h3>
+              <p data-i18n="expTwoBody">
+                聚焦数据产品、内容工具和内部系统，沉淀需求拆解、原型验证和工程交付经验。
+              </p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section id="contact" aria-labelledby="contact-title">
+        <div class="contact-panel">
+          <div>
+            <p class="section-kicker" data-i18n="contactKicker">Contact</p>
+            <h2 id="contact-title" data-i18n="contactTitle">欢迎聊聊机会或合作。</h2>
+            <p data-i18n="contactBody">
+              这里预留你的真实联系方式。你可以替换邮箱、GitHub、LinkedIn 或个人博客链接。
+            </p>
+          </div>
+          <div class="contact-side">
+            <div class="contact-links">
+              <a href="mailto:2717067143@qq.com" data-i18n="contactEmail">2717067143@qq.com</a>
+              <a href="tel:13777882674" data-i18n="contactGithub">13777882674</a>
+              <a href="#top" data-i18n="contactLinkedin">杭州 / 可立即到岗</a>
+            </div>
+            <div class="work-shortcuts" aria-label="Vibe Coding works">
+              <strong data-i18n="workShortcutTitle">3 个 Vibe Coding 作品入口</strong>
+              <a href="#works" data-i18n="workShortcutAll">回到作品展示区</a>
+              <a href="works/requirement-workbench.html" data-i18n="workOneTitle">客户需求到 PRD 工作台</a>
+              <a href="works/saas-dashboard.html" data-i18n="workTwoTitle">SaaS 运营数据看板原型</a>
+              <a href="works/acceptance-tracker.html" data-i18n="workThreeTitle">测试验收与反馈闭环工具</a>
+            </div>
+            <form class="contact-form" id="contact-form">
+              <label class="sr-only" for="contact-name" data-i18n="contactNameLabel">称呼</label>
+              <input id="contact-name" name="name" autocomplete="name" data-i18n-placeholder="contactNamePlaceholder" placeholder="您的称呼 / 公司" />
+              <label class="sr-only" for="contact-intent" data-i18n="contactIntentLabel">沟通意向</label>
+              <select id="contact-intent" name="intent" required>
+                <option value="产品经理实习" data-i18n="contactIntentIntern">产品经理实习</option>
+                <option value="项目作品交流" data-i18n="contactIntentWorks">项目作品交流</option>
+                <option value="面试安排" data-i18n="contactIntentInterview">面试安排</option>
+              </select>
+              <label class="sr-only" for="contact-message" data-i18n="contactMessageLabel">留言</label>
+              <textarea id="contact-message" name="message" required data-i18n-placeholder="contactMessagePlaceholder" placeholder="可写岗位、城市、面试时间或想了解的作品"></textarea>
+              <button class="button primary" type="submit" data-i18n="contactSubmit">提交到本地后端</button>
+              <p class="form-feedback" id="contact-feedback" data-i18n="contactFormHint">表单会提交到本地 Node API，用来展示主页也具备后端交互。</p>
+            </form>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <span data-i18n="footer">© 2026 郑舒予. AI 产品经理求职主页。</span>
+    </footer>
+
+    <script>
+      const copy = {
+        zh: {
+          pageTitle: "郑舒予 | B端产品经理实习生",
+          pageDescription:
+            "郑舒予的 B 端产品经理实习求职主页，展示需求分析、产品文档、原型设计、测试验收与数据产品作品。",
+          brand: "郑舒予",
+          navAbout: "关于",
+          navSkills: "能力",
+          navWorks: "作品",
+          navProjects: "经历",
+          navContact: "联系",
+          heroEyebrow: "B端产品经理实习 / SaaS产品方向",
+          heroTitle: "把客户需求拆成清晰的产品方案、原型和验收标准。",
+          heroLead:
+            "我是郑舒予，人工智能硕士在读，软件工程本科背景。正在寻找 B 端 / 数据产品 / SaaS 产品经理实习，能支持需求调研、PRD 与版本文档、流程图和原型、测试验收及跨团队沟通。",
+          heroPrimary: "查看作品",
+          heroSecondary: "联系我",
+          socialGithub: "邮箱",
+          socialLinkedin: "电话",
+          socialBlog: "杭州",
+          backendLabel: "后端状态",
+          backendFallback: "静态预览可用，连接本地 API 后显示访问数据",
+          backendConnected: "本地 API 已连接，访问 {views} 次，收到 {contacts} 条意向",
+          statusTitle: "求职状态",
+          statusText: "产品经理实习 / 杭州 / 可立即到岗",
+          statusBadge: "可到岗",
+          aboutKicker: "About",
+          aboutTitle: "更适配 B 端产品岗位的技术型产品候选人。",
+          aboutIntro:
+            "目标岗位要求产品设计支持、需求调研、原型设计、文档撰写、测试验收和团队协作。我的履历可以对应到客户场景拆解、解决方案文档、流程推进和数据分析项目。",
+          aboutBody1:
+            "我有软件工程本科和人工智能硕士训练，熟悉 Python、SQL、机器学习、数据挖掘和多源数据分析，能与开发团队对齐技术边界，也能从客户视角整理业务流程和功能优先级。",
+          aboutBody2:
+            "在安泉数智和中国电信实习中，我参与行业客户需求分析、方案拆解、投标材料、实施手册、培训手册和质量保证文档输出，积累了从需求传递到项目推进的真实协作经验。",
+          metricOneValue: "3+",
+          metricOneLabel: "行业客户方案参与",
+          metricTwoValue: "12",
+          metricTwoLabel: "份技术与交付文档",
+          metricThreeValue: "3",
+          metricThreeLabel: "个可演示 Vibe Coding 作品",
+          skillsKicker: "Skills",
+          skillsTitle: "直接对齐岗位 JD 的产品能力。",
+          skillsIntro:
+            "能力结构围绕 B 端产品经理实习的核心任务展开：需求调研、原型/流程表达、产品文档、测试验收和跨团队沟通。",
+          skillOneTitle: "需求调研与分析",
+          skillOneBody: "能从客户业务场景中提炼痛点、角色、流程和功能模块，形成结构化需求材料。",
+          skillOneA: "用户视角",
+          skillOneB: "客户访谈",
+          skillOneC: "业务流程",
+          skillOneD: "优先级判断",
+          skillTwoTitle: "原型与产品文档",
+          skillTwoBody: "具备流程图、功能说明、版本发布文档和解决方案文档经验，可快速补齐 Visio/Axure/墨刀类工具表达。",
+          skillTwoA: "需求分析",
+          skillTwoB: "流程图",
+          skillTwoC: "PRD",
+          skillTwoD: "版本文档",
+          skillThreeTitle: "测试验收与协作",
+          skillThreeBody: "能参与测试用例设计、功能验收、问题跟踪和反馈收集，推动需求在设计、开发、测试、运营之间准确传递。",
+          skillThreeA: "测试验收",
+          skillThreeB: "问题跟踪",
+          skillThreeC: "反馈闭环",
+          skillThreeD: "团队沟通",
+          worksKicker: "Vibe Coding",
+          worksTitle: "用可交互作品展示产品能力。",
+          worksIntro:
+            "这组本地 Demo 针对目标岗位的 B 端产品职责设计，覆盖需求调研、原型表达、产品文档、测试验收和反馈闭环。",
+          workOneMeta: "PRD / SaaS",
+          workOneTitle: "客户需求到 PRD 工作台",
+          workOneBody:
+            "将客户反馈、业务目标、用户故事、功能优先级和验收标准放进同一工作台，模拟产品经理从调研到文档沉淀的过程。",
+          workOneTagA: "需求分析",
+          workOneTagB: "PRD",
+          workOneTagC: "优先级",
+          workTwoMeta: "Prototype / B2B",
+          workTwoTitle: "SaaS 运营数据看板原型",
+          workTwoBody:
+            "面向运营和客户成功团队，设计关键指标、异常提醒、筛选联动和客户分层，用数据产品思维支撑业务决策。",
+          workTwoTagA: "数据产品",
+          workTwoTagB: "原型设计",
+          workTwoTagC: "B 端场景",
+          workThreeMeta: "QA / Feedback",
+          workThreeTitle: "测试验收与反馈闭环工具",
+          workThreeBody:
+            "模拟功能验收、问题跟踪、用户反馈收集和迭代状态管理，体现产品经理与设计、开发、测试、运营协作的基本功。",
+          workThreeTagA: "测试验收",
+          workThreeTagB: "问题跟踪",
+          workThreeTagC: "迭代优化",
+          workLink: "打开作品",
+          processPrdLabel: "PRD",
+          processAxureLabel: "Axure",
+          processBuildLabel: "产出",
+          processTestLabel: "测试",
+          workOneProcessPrd: "客户反馈池、功能范围、流程和验收标准",
+          workOneProcessAxure: "信息架构、Tab 原型、反馈录入路径",
+          workOneProcessBuild: "Node API + PRD 工作台交互页面",
+          workOneProcessTest: "新增反馈、勾选验收、接口回写验证",
+          workTwoProcessPrd: "指标口径、客户分层、异常跟进规则",
+          workTwoProcessAxure: "筛选器、指标卡、趋势图和列表原型",
+          workTwoProcessBuild: "动态数据看板 + 跟进任务后端",
+          workTwoProcessTest: "筛选联动、创建跟进、数据刷新验证",
+          workThreeProcessPrd: "验收清单、反馈分级、闭环状态规则",
+          workThreeProcessAxure: "清单、反馈池、状态标签和统计原型",
+          workThreeProcessBuild: "验收管理工具 + 反馈写入接口",
+          workThreeProcessTest: "勾选状态、反馈新增、统计同步验证",
+          prdLink: "查看 PRD",
+          workShortcutTitle: "3 个 Vibe Coding 作品入口",
+          workShortcutAll: "回到作品展示区",
+          projectsKicker: "Projects",
+          projectsTitle: "用真实经历支撑岗位匹配度。",
+          projectsIntro:
+            "保留简历中的真实项目和实习经历，但表达重点转向 B 端产品岗位需要的需求拆解、文档输出、跨团队沟通和验收推进。",
+          projectOneMeta: "AI Security / 2026",
+          projectOneTitle: "大模型安全项目需求与方案支持",
+          projectOneBody:
+            "在安泉数智参与政务、金融、交通行业大模型安全项目，调研公安、网信办、交通运输和金融机构场景，将客户需求拆解为功能模块、业务流程和技术方案。",
+          projectOneImpact:
+            "输出 3+ 份定制化解决方案及投标文件，沉淀 5+ 类典型业务场景与方案模板，提升团队后续响应效率。",
+          projectOneTagA: "客户调研",
+          projectOneTagB: "需求拆解",
+          projectOneTagC: "解决方案",
+          projectTwoMeta: "Blockchain / 2025",
+          projectTwoTitle: "匿名链下支付通道网络设计",
+          projectTwoBody:
+            "作为核心成员负责整体方案设计与进度把控，拆解 6 个里程碑并协调 4 名成员，将链下支付和 BLS 聚合签名等复杂逻辑整理成系统架构文档。",
+          projectTwoImpact:
+            "项目提前 7 天交付，完成 56 页技术方案和总决赛答辩材料，从 1053 支队伍中获得全国一等奖。",
+          projectTwoTagA: "进度把控",
+          projectTwoTagB: "区块链",
+          projectTwoTagC: "全国一等奖",
+          projectThreeMeta: "Data Modeling / 2025",
+          projectThreeTitle: "高速列车轴承故障诊断数据产品思路",
+          projectThreeBody:
+            "基于迁移学习与特征提取构建风险监测体系，融合传感器和运维记录等多源数据，将复杂算法流程拆解为 7 个标准化模块。",
+          projectThreeImpact:
+            "故障预警准确率达到 92%，方案预计提升轴承维护效率 30%，并在 72 小时竞赛周期内完成交付。",
+          projectThreeTagA: "数据分析",
+          projectThreeTagB: "多源数据",
+          projectThreeTagC: "故障预警",
+          projectLink: "联系了解",
+          experienceKicker: "Experience",
+          experienceTitle: "贴近产品助理工作的实习经历。",
+          experienceIntro:
+            "经历重点体现客户需求理解、方案输出、技术文档、项目节点协同和 AI 产品岗位相关的业务敏感度。",
+          expOneDate: "2026.04 - 2026.06",
+          expOneTitle: "AI 安全解决方案工程师 / 安泉数智科技有限公司",
+          expOneBody:
+            "参与 3 个政务、金融、交通行业大模型安全项目，完成需求分析、方案拆解、投标材料和实施路径文档，沉淀标准化场景模板以支持后续快速响应。",
+          expTwoDate: "2024.03 - 2024.05",
+          expTwoTitle: "技术助理 / 中国电信股份有限公司金华分公司",
+          expTwoBody:
+            "独立撰写实施手册、培训手册、质量保证文档等 12 份材料，对接项目组收集反馈并迭代 8 版，参与需求评审并提出 3 条可行性优化建议。",
+          contactKicker: "Contact",
+          contactTitle: "正在寻找 AI 产品经理实习机会。",
+          contactBody:
+            "意向城市杭州，求职类型为实习，当前可立即到岗。欢迎通过邮箱或电话联系，进一步了解简历、项目材料或面试安排。",
+          contactEmail: "2717067143@qq.com",
+          contactGithub: "13777882674",
+          contactLinkedin: "杭州 / 可立即到岗",
+          contactNameLabel: "称呼",
+          contactNamePlaceholder: "您的称呼 / 公司",
+          contactIntentLabel: "沟通意向",
+          contactIntentIntern: "产品经理实习",
+          contactIntentWorks: "项目作品交流",
+          contactIntentInterview: "面试安排",
+          contactMessageLabel: "留言",
+          contactMessagePlaceholder: "可写岗位、城市、面试时间或想了解的作品",
+          contactSubmit: "提交到本地后端",
+          contactFormHint: "表单会提交到本地 Node API，用来展示主页也具备后端交互。",
+          contactSubmitting: "正在提交到本地后端...",
+          contactSuccess: "已写入本地后端：第 {contacts} 条意向。",
+          contactError: "提交失败，请确认正在通过本地服务访问页面。",
+          footer: "© 2026 郑舒予. AI 产品经理求职主页。"
+        },
+        en: {
+          pageTitle: "Shuyu Zheng | B2B Product Manager Intern",
+          pageDescription:
+            "Shuyu Zheng's B2B product manager internship portfolio, highlighting requirements analysis, product documentation, prototyping, QA acceptance, and data product demos.",
+          brand: "Shuyu Zheng",
+          navAbout: "About",
+          navSkills: "Skills",
+          navWorks: "Works",
+          navProjects: "Experience",
+          navContact: "Contact",
+          heroEyebrow: "B2B Product Manager Intern / SaaS Product",
+          heroTitle: "Turning customer needs into clear product plans, prototypes, and acceptance criteria.",
+          heroLead:
+            "I am Shuyu Zheng, an AI master's student with a Software Engineering background. I am seeking a B2B, data product, or SaaS product manager internship and can support research, PRD and release documents, flows and prototypes, QA acceptance, and cross-team communication.",
+          heroPrimary: "View Works",
+          heroSecondary: "Contact Me",
+          socialGithub: "Email",
+          socialLinkedin: "Phone",
+          socialBlog: "Hangzhou",
+          backendLabel: "Backend",
+          backendFallback: "Static preview works; local API shows live visit data",
+          backendConnected: "Local API connected: {views} visits, {contacts} leads",
+          statusTitle: "Job status",
+          statusText: "Product Manager Intern / Hangzhou / 3 days per week",
+          statusBadge: "Available",
+          aboutKicker: "About",
+          aboutTitle: "A technical product candidate for B2B product teams.",
+          aboutIntro:
+            "The target role values product design support, research, prototyping, documentation, testing acceptance, and team collaboration. My experience maps to customer scenario breakdown, solution documents, workflow delivery, and data analysis projects.",
+          aboutBody1:
+            "With a Software Engineering bachelor's degree and current AI master's training, I understand Python, SQL, machine learning, data mining, and multi-source analysis. I can align with developers on technical boundaries while structuring business flows and feature priorities from a customer perspective.",
+          aboutBody2:
+            "During internships at Anquan Digital Intelligence and China Telecom, I worked on industry customer analysis, solution breakdown, bidding materials, implementation manuals, training manuals, and quality assurance documents, building hands-on experience from requirement transfer to project progress.",
+          metricOneValue: "3+",
+          metricOneLabel: "industry customer solutions",
+          metricTwoValue: "12",
+          metricTwoLabel: "technical and delivery documents",
+          metricThreeValue: "3",
+          metricThreeLabel: "interactive vibe coding works",
+          skillsKicker: "Skills",
+          skillsTitle: "Product skills aligned to the role description.",
+          skillsIntro:
+            "The skill structure maps to the core tasks of a B2B product manager intern: research, prototypes and flows, product documentation, acceptance testing, and cross-team communication.",
+          skillOneTitle: "Research & Analysis",
+          skillOneBody:
+            "Able to extract pain points, roles, workflows, and functional modules from customer business scenarios.",
+          skillOneA: "User Thinking",
+          skillOneB: "Interviews",
+          skillOneC: "Business Flows",
+          skillOneD: "Prioritization",
+          skillTwoTitle: "Prototypes & Docs",
+          skillTwoBody:
+            "Experienced with flows, feature descriptions, release documents, and solution writing, with fast learning ability for Visio, Axure, or Modao-style prototyping tools.",
+          skillTwoA: "Requirements",
+          skillTwoB: "Flowcharts",
+          skillTwoC: "PRD",
+          skillTwoD: "Release Docs",
+          skillThreeTitle: "QA & Collaboration",
+          skillThreeBody:
+            "Can participate in test case design, acceptance checks, issue tracking, feedback collection, and communication with design, development, QA, and operations teams.",
+          skillThreeA: "Acceptance",
+          skillThreeB: "Issue Tracking",
+          skillThreeC: "Feedback Loop",
+          skillThreeD: "Team Sync",
+          worksKicker: "Vibe Coding",
+          worksTitle: "Interactive works that demonstrate product thinking.",
+          worksIntro:
+            "These local demos are designed around B2B product responsibilities in the target role, covering research, prototype expression, product documentation, QA acceptance, and feedback loops.",
+          workOneMeta: "PRD / SaaS",
+          workOneTitle: "Customer Need to PRD Workspace",
+          workOneBody:
+            "A product workspace that brings customer feedback, business goals, user stories, priorities, and acceptance criteria into one place.",
+          workOneTagA: "Research",
+          workOneTagB: "PRD",
+          workOneTagC: "Priority",
+          workTwoMeta: "Prototype / B2B",
+          workTwoTitle: "SaaS Operations Dashboard Prototype",
+          workTwoBody:
+            "A data product prototype for operations and customer success teams, including metrics, alerts, filters, and customer segmentation.",
+          workTwoTagA: "Data Product",
+          workTwoTagB: "Prototype",
+          workTwoTagC: "B2B Scenario",
+          workThreeMeta: "QA / Feedback",
+          workThreeTitle: "Acceptance & Feedback Tracker",
+          workThreeBody:
+            "A lightweight tool for acceptance checks, issue tracking, user feedback, and iteration status management.",
+          workThreeTagA: "Acceptance",
+          workThreeTagB: "Issue Tracking",
+          workThreeTagC: "Iteration",
+          workLink: "Open Work",
+          processPrdLabel: "PRD",
+          processAxureLabel: "Axure",
+          processBuildLabel: "Output",
+          processTestLabel: "Test",
+          workOneProcessPrd: "Feedback pool, scope, flow, and acceptance criteria",
+          workOneProcessAxure: "Information architecture, tab prototype, and feedback path",
+          workOneProcessBuild: "Node API + interactive PRD workspace",
+          workOneProcessTest: "New feedback, acceptance checks, and API writeback",
+          workTwoProcessPrd: "Metric definitions, customer segments, and follow-up rules",
+          workTwoProcessAxure: "Filters, metric cards, trend chart, and list prototype",
+          workTwoProcessBuild: "Dynamic dashboard + follow-up backend",
+          workTwoProcessTest: "Filter linkage, follow-up creation, and data refresh",
+          workThreeProcessPrd: "Acceptance checklist, feedback priority, and closure rules",
+          workThreeProcessAxure: "Checklist, feedback pool, status tags, and stats prototype",
+          workThreeProcessBuild: "Acceptance tracker + feedback write API",
+          workThreeProcessTest: "Check state, feedback creation, and synced stats",
+          prdLink: "View PRD",
+          workShortcutTitle: "3 Vibe Coding work links",
+          workShortcutAll: "Back to work showcase",
+          projectsKicker: "Projects",
+          projectsTitle: "Real experience that supports role fit.",
+          projectsIntro:
+            "The real resume projects are reframed around B2B product work: requirement breakdown, document output, cross-team communication, and acceptance-oriented delivery.",
+          projectOneMeta: "AI Security / 2026",
+          projectOneTitle: "LLM Safety Requirement and Solution Support",
+          projectOneBody:
+            "At Anquan Digital Intelligence, contributed to LLM safety projects for government, finance, and transportation clients by mapping customer scenarios into functional modules, business flows, and technical solutions.",
+          projectOneImpact:
+            "Delivered 3+ customized solution and bidding documents, and summarized 5+ reusable scenario templates to improve team response efficiency.",
+          projectOneTagA: "Customer Research",
+          projectOneTagB: "Requirements",
+          projectOneTagC: "Solutions",
+          projectTwoMeta: "Blockchain / 2025",
+          projectTwoTitle: "Anonymous Off-chain Payment Channel Network",
+          projectTwoBody:
+            "As a core member, owned overall solution design and progress tracking, split 6 milestones, coordinated 4 teammates, and translated off-chain payment and BLS aggregate signature logic into architecture documentation.",
+          projectTwoImpact:
+            "Delivered 7 days ahead of schedule, produced a 56-page technical plan and final defense materials, and won a national first prize among 1,053 teams.",
+          projectTwoTagA: "Progress Tracking",
+          projectTwoTagB: "Blockchain",
+          projectTwoTagC: "National First Prize",
+          projectThreeMeta: "Data Modeling / 2025",
+          projectThreeTitle: "Data Product Thinking for Train Bearing Diagnosis",
+          projectThreeBody:
+            "Built a risk monitoring approach based on transfer learning and feature extraction, integrating sensor and maintenance data while breaking the algorithm process into 7 standardized modules.",
+          projectThreeImpact:
+            "Reached 92% warning accuracy, with an estimated 30% maintenance efficiency improvement, delivered within a 72-hour competition cycle.",
+          projectThreeTagA: "Data Analysis",
+          projectThreeTagB: "Multi-source Data",
+          projectThreeTagC: "Risk Warning",
+          projectLink: "Contact for Details",
+          experienceKicker: "Experience",
+          experienceTitle: "Internship experience close to product assistant work.",
+          experienceIntro:
+            "The experience highlights customer understanding, solution writing, technical documentation, project coordination, and AI product relevance.",
+          expOneDate: "2026.04 - 2026.06",
+          expOneTitle:
+            "AI Safety Solution Engineer / Anquan Digital Intelligence Technology",
+          expOneBody:
+            "Contributed to 3 LLM safety projects across government, finance, and transportation, covering requirement analysis, solution breakdown, bidding materials, implementation paths, and reusable scenario templates.",
+          expTwoDate: "2024.03 - 2024.05",
+          expTwoTitle: "Technical Assistant / China Telecom Jinhua Branch",
+          expTwoBody:
+            "Independently drafted 12 implementation, training, and quality assurance documents, collected feedback from project members across 8 iterations, and proposed 3 feasible optimization suggestions in requirement reviews.",
+          contactKicker: "Contact",
+          contactTitle: "Seeking an AI Product Manager internship.",
+          contactBody:
+            "Preferred city: Hangzhou. Internship type: available immediately. Please reach out by email or phone for resume details, project materials, or interviews.",
+          contactEmail: "2717067143@qq.com",
+          contactGithub: "13777882674",
+          contactLinkedin: "Hangzhou / Available now",
+          contactNameLabel: "Name",
+          contactNamePlaceholder: "Your name / company",
+          contactIntentLabel: "Intent",
+          contactIntentIntern: "Product manager internship",
+          contactIntentWorks: "Discuss portfolio works",
+          contactIntentInterview: "Interview scheduling",
+          contactMessageLabel: "Message",
+          contactMessagePlaceholder: "Role, city, interview time, or portfolio question",
+          contactSubmit: "Submit to local backend",
+          contactFormHint: "This form posts to the local Node API to show backend interaction on the homepage.",
+          contactSubmitting: "Submitting to local backend...",
+          contactSuccess: "Saved in local backend: lead #{contacts}.",
+          contactError: "Submit failed. Please open the page through the local server.",
+          footer: "© 2026 Shuyu Zheng. AI Product Manager portfolio."
+        }
+      };
+
+      let currentLang = "zh";
+      let homepageState = null;
+
+      const applyLanguage = (lang) => {
+        currentLang = lang;
+        document.documentElement.lang = lang === "zh" ? "zh-CN" : "en";
+        document.title = copy[lang].pageTitle;
+        const metaDescription = document.querySelector('meta[name="description"]');
+        if (metaDescription) {
+          metaDescription.setAttribute("content", copy[lang].pageDescription);
+        }
+
+        document.querySelectorAll("[data-i18n]").forEach((node) => {
+          const key = node.dataset.i18n;
+          if (copy[lang][key]) {
+            node.textContent = copy[lang][key];
+          }
+        });
+
+        document.querySelectorAll("[data-i18n-placeholder]").forEach((node) => {
+          const key = node.dataset.i18nPlaceholder;
+          if (copy[lang][key]) {
+            node.setAttribute("placeholder", copy[lang][key]);
+          }
+        });
+
+        document.querySelectorAll("[data-lang]").forEach((button) => {
+          button.setAttribute("aria-pressed", String(button.dataset.lang === lang));
+        });
+
+        renderHomepageState();
+      };
+
+      const renderHomepageState = () => {
+        if (!homepageState) {
+          return;
+        }
+
+        const localizedProfile = homepageState.profile?.[currentLang];
+        if (localizedProfile) {
+          const statusText = document.querySelector("[data-i18n='statusText']");
+          const statusBadge = document.querySelector("[data-i18n='statusBadge']");
+          const contactLocation = document.querySelector("[data-i18n='contactLinkedin']");
+          const heroEyebrow = document.querySelector("[data-i18n='heroEyebrow']");
+          if (statusText) statusText.textContent = localizedProfile.status;
+          if (statusBadge) statusBadge.textContent = localizedProfile.availability;
+          if (contactLocation) contactLocation.textContent = localizedProfile.contact;
+          if (heroEyebrow) heroEyebrow.textContent = localizedProfile.role;
+        }
+
+        const metricOne = document.querySelector("[data-i18n='metricOneValue']");
+        const metricTwo = document.querySelector("[data-i18n='metricTwoValue']");
+        const metricThree = document.querySelector("[data-i18n='metricThreeValue']");
+        if (metricOne) metricOne.textContent = `${homepageState.metrics.solutionProjects}+`;
+        if (metricTwo) metricTwo.textContent = String(homepageState.metrics.documents);
+        if (metricThree) metricThree.textContent = String(homepageState.metrics.works);
+
+        const backendStatus = document.getElementById("backend-status");
+        if (backendStatus) {
+          backendStatus.textContent = copy[currentLang].backendConnected
+            .replace("{views}", homepageState.stats.views)
+            .replace("{contacts}", homepageState.stats.contacts);
+        }
+      };
+
+      const loadHomepageState = async () => {
+        try {
+          const response = await fetch("/api/profile", { cache: "no-store" });
+          if (!response.ok) {
+            throw new Error("Profile API failed");
+          }
+          homepageState = await response.json();
+          renderHomepageState();
+        } catch (error) {
+          homepageState = null;
+        }
+      };
+
+      const setupContactForm = () => {
+        const form = document.getElementById("contact-form");
+        const feedback = document.getElementById("contact-feedback");
+        if (!form || !feedback) {
+          return;
+        }
+
+        form.addEventListener("submit", async (event) => {
+          event.preventDefault();
+          const submitButton = form.querySelector("button[type='submit']");
+          const payload = Object.fromEntries(new FormData(form).entries());
+          feedback.textContent = copy[currentLang].contactSubmitting;
+          if (submitButton) submitButton.disabled = true;
+
+          try {
+            const response = await fetch("/api/contact", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(payload)
+            });
+            if (!response.ok) {
+              throw new Error("Contact API failed");
+            }
+            const result = await response.json();
+            homepageState = homepageState || {};
+            homepageState.stats = result.stats;
+            feedback.textContent = copy[currentLang].contactSuccess.replace(
+              "{contacts}",
+              result.stats.contacts
+            );
+            form.reset();
+            renderHomepageState();
+          } catch (error) {
+            feedback.textContent = copy[currentLang].contactError;
+          } finally {
+            if (submitButton) submitButton.disabled = false;
+          }
+        });
+      };
+
+      document.querySelectorAll("[data-lang]").forEach((button) => {
+        button.addEventListener("click", () => applyLanguage(button.dataset.lang));
+      });
+
+      applyLanguage("zh");
+      setupContactForm();
+      loadHomepageState();
+    </script>
+  </body>
+</html>

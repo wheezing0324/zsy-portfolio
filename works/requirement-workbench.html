@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>客户需求到 PRD 工作台 | 郑舒予</title>
+    <style>
+      :root {
+        --bg: #f6f4ee;
+        --panel: #ffffff;
+        --ink: #202426;
+        --muted: #66706e;
+        --line: #d9dfdc;
+        --accent: #176b5b;
+        --warm: #c47a42;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", sans-serif;
+        line-height: 1.6;
+      }
+      main {
+        width: min(100% - 32px, 1120px);
+        margin: 0 auto;
+        padding: 38px 0 56px;
+      }
+      a { color: inherit; text-decoration: none; }
+      .topbar {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        align-items: center;
+        margin-bottom: 32px;
+      }
+      .back {
+        padding: 10px 14px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        background: var(--panel);
+        color: var(--muted);
+        font-weight: 700;
+      }
+      .top-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      .badge {
+        color: var(--accent);
+        font-size: 0.9rem;
+        font-weight: 800;
+      }
+      h1 {
+        max-width: 820px;
+        margin: 0 0 14px;
+        font-size: clamp(2.2rem, 5vw, 4.8rem);
+        line-height: 1.02;
+      }
+      .lead {
+        max-width: 760px;
+        margin: 0 0 28px;
+        color: var(--muted);
+        font-size: 1.12rem;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: 0.85fr 1.15fr;
+        gap: 18px;
+        margin-top: 28px;
+      }
+      .panel {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+        padding: 22px;
+      }
+      h2, h3 { margin: 0 0 12px; }
+      .item {
+        padding: 14px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #fbfcfb;
+        margin-top: 10px;
+      }
+      .item strong { display: block; margin-bottom: 4px; }
+      .item p, .panel p { margin: 0; color: var(--muted); }
+      .pill-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 14px;
+      }
+      .pill {
+        padding: 6px 10px;
+        border-radius: 999px;
+        background: #e2eee9;
+        color: #0f4e43;
+        font-size: 0.84rem;
+        font-weight: 760;
+      }
+      .api-status {
+        display: inline-flex;
+        margin: 4px 0 18px;
+        padding: 8px 11px;
+        border: 1px solid rgba(23, 107, 91, 0.22);
+        border-radius: 8px;
+        background: #edf7f3;
+        color: var(--accent);
+        font-size: 0.9rem;
+        font-weight: 760;
+      }
+      .interaction-form {
+        display: grid;
+        gap: 10px;
+        margin-top: 16px;
+        padding-top: 16px;
+        border-top: 1px solid var(--line);
+      }
+      .interaction-form input,
+      .interaction-form textarea {
+        width: 100%;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #fff;
+        color: var(--ink);
+        font: inherit;
+      }
+      .interaction-form input { min-height: 40px; padding: 0 12px; }
+      .interaction-form textarea { min-height: 86px; padding: 10px 12px; resize: vertical; }
+      .tabs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin: 18px 0;
+      }
+      button {
+        min-height: 40px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        background: var(--panel);
+        color: var(--muted);
+        cursor: pointer;
+        font: inherit;
+        font-weight: 760;
+        padding: 0 14px;
+      }
+      button[aria-pressed="true"] {
+        border-color: var(--accent);
+        background: var(--accent);
+        color: white;
+      }
+      .prd {
+        display: none;
+      }
+      .prd.active {
+        display: block;
+      }
+      .acceptance {
+        display: grid;
+        gap: 10px;
+      }
+      label {
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+        padding: 12px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #fbfcfb;
+      }
+      input { margin-top: 5px; }
+      @media (max-width: 820px) {
+        .grid { grid-template-columns: 1fr; }
+        .topbar { align-items: flex-start; flex-direction: column; }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="topbar">
+        <div class="top-actions">
+          <a class="back" href="../index.html#works">返回主页</a>
+          <a class="back" href="../docs/prd-requirement-workbench.html">查看 PRD</a>
+        </div>
+        <span class="badge">Vibe Coding Demo / PRD</span>
+      </div>
+      <h1>客户需求到 PRD 工作台</h1>
+      <p class="lead">
+        这个 Demo 模拟 B 端产品经理把客户反馈整理成用户故事、功能范围、优先级和验收标准的过程，适配“需求调研、产品文档、原型设计支持”的岗位职责。
+      </p>
+      <div class="api-status" id="api-status">正在连接后端 API...</div>
+
+      <section class="grid">
+        <div class="panel">
+          <h2>客户反馈池</h2>
+          <div id="feedback-list"></div>
+          <div class="pill-row" id="feedback-tags"></div>
+          <form class="interaction-form" id="feedback-form">
+            <h3>新增客户反馈</h3>
+            <input name="role" value="招聘方 / 面试官" aria-label="反馈角色" />
+            <textarea name="text" required aria-label="反馈内容">希望看到候选人能把模糊需求快速拆成 PRD、验收标准和后续迭代计划。</textarea>
+            <button type="submit">提交到后端并刷新 PRD</button>
+          </form>
+        </div>
+
+        <div class="panel">
+          <h2>PRD 摘要</h2>
+          <div class="tabs" aria-label="PRD sections">
+            <button type="button" data-tab="scope" aria-pressed="true">功能范围</button>
+            <button type="button" data-tab="flow" aria-pressed="false">流程设计</button>
+            <button type="button" data-tab="acceptance" aria-pressed="false">验收标准</button>
+          </div>
+          <div class="prd active" data-panel="scope"></div>
+          <div class="prd" data-panel="flow"></div>
+          <div class="prd" data-panel="acceptance"></div>
+        </div>
+      </section>
+    </main>
+    <script>
+      const fallbackPrd = {
+        feedback: [
+          { role: "运营负责人", text: "客户续费前想看到各门店使用活跃度和异常账号，最好能按行业和客户等级筛选。" },
+          { role: "客户成功", text: "每次导出数据都要找研发，内部同学需要一个固定口径的报表入口。" },
+          { role: "测试同学", text: "筛选条件和导出字段需要提前确定，否则验收时很容易反复。" }
+        ],
+        tags: ["角色：运营 / CS / 测试", "场景：续费分析", "目标：减少人工取数"],
+        sections: {
+          scope: {
+            title: "功能范围",
+            body: "首版提供客户活跃度看板、异常账号提醒、客户等级筛选、固定字段导出。暂不做自定义指标配置，避免首版范围失控。",
+            tags: ["P0：活跃度", "P0：导出", "P1：异常提醒"]
+          },
+          flow: {
+            title: "流程设计",
+            body: "运营进入看板后选择客户等级和时间范围，查看趋势与异常列表；确认数据后导出标准报表；客户成功基于报表准备续费沟通材料。",
+            tags: []
+          },
+          acceptance: {
+            title: "验收标准",
+            items: [
+              { id: "filters-refresh", text: "筛选条件改变后，指标卡和异常列表同步刷新。", done: true },
+              { id: "export-fields", text: "导出文件包含客户名称、等级、活跃账号、异常原因和最近访问时间。", done: true },
+              { id: "empty-state", text: "异常提醒空状态显示解释文案，不出现空白页面。", done: false }
+            ]
+          }
+        }
+      };
+
+      let prdState = fallbackPrd;
+      const buttons = document.querySelectorAll("[data-tab]");
+      const panels = document.querySelectorAll("[data-panel]");
+      const apiStatus = document.getElementById("api-status");
+
+      const setApiStatus = (message) => {
+        apiStatus.textContent = message;
+      };
+
+      const renderPrd = (data) => {
+        document.getElementById("feedback-list").innerHTML = data.feedback
+          .map((item) => `<div class="item"><strong>${item.role}</strong><p>“${item.text}”</p></div>`)
+          .join("");
+        document.getElementById("feedback-tags").innerHTML = data.tags
+          .map((tag) => `<span class="pill">${tag}</span>`)
+          .join("");
+
+        ["scope", "flow"].forEach((key) => {
+          const section = data.sections[key];
+          document.querySelector(`[data-panel="${key}"]`).innerHTML = `
+            <h3>${section.title}</h3>
+            <p>${section.body}</p>
+            <div class="pill-row">${(section.tags || []).map((tag) => `<span class="pill">${tag}</span>`).join("")}</div>
+          `;
+        });
+
+        const acceptance = data.sections.acceptance;
+        document.querySelector('[data-panel="acceptance"]').innerHTML = `
+          <h3>${acceptance.title}</h3>
+          <div class="acceptance">
+            ${acceptance.items
+              .map(
+                (item) =>
+                  `<label><input type="checkbox" data-acceptance-id="${item.id}" ${item.done ? "checked" : ""} /> ${item.text}</label>`
+              )
+              .join("")}
+          </div>
+        `;
+
+        document.querySelectorAll("[data-acceptance-id]").forEach((input) => {
+          input.addEventListener("change", async () => {
+            const payload = { id: input.dataset.acceptanceId, done: input.checked };
+            try {
+              const response = await fetch("/api/prd/acceptance", {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+              });
+              prdState.sections.acceptance = await response.json();
+              setApiStatus(`PATCH /api/prd/acceptance 已写入：${input.checked ? "完成" : "未完成"}`);
+              renderPrd(prdState);
+            } catch {
+              const item = prdState.sections.acceptance.items.find((entry) => entry.id === payload.id);
+              if (item) item.done = payload.done;
+              setApiStatus("离线静态模式：仅更新页面本地状态");
+            }
+          });
+        });
+      };
+
+      document.getElementById("feedback-form").addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const payload = Object.fromEntries(new FormData(event.currentTarget).entries());
+        setApiStatus("POST /api/prd/feedback 提交中...");
+        try {
+          const response = await fetch("/api/prd/feedback", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+          });
+          prdState = await response.json();
+          renderPrd(prdState);
+          setApiStatus(`POST /api/prd/feedback 已写入，反馈池共 ${prdState.feedback.length} 条`);
+        } catch {
+          prdState.feedback.unshift(payload);
+          renderPrd(prdState);
+          setApiStatus("离线静态模式：新增反馈只保存在当前页面");
+        }
+      });
+
+      buttons.forEach((button) => {
+        button.addEventListener("click", () => {
+          buttons.forEach((item) => item.setAttribute("aria-pressed", "false"));
+          panels.forEach((panel) => panel.classList.remove("active"));
+          button.setAttribute("aria-pressed", "true");
+          document.querySelector(`[data-panel="${button.dataset.tab}"]`).classList.add("active");
+        });
+      });
+
+      fetch("/api/prd")
+        .then((response) => response.json())
+        .then((data) => {
+          prdState = data;
+          renderPrd(prdState);
+          setApiStatus("GET /api/prd 已从后端加载 PRD 数据");
+        })
+        .catch(() => {
+          renderPrd(prdState);
+          setApiStatus("未连接后端，当前使用静态 fallback 数据");
+        });
+    </script>
+  </body>
+</html>

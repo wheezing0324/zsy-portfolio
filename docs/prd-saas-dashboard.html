@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PRD | SaaS 运营数据看板原型</title>
+    <link rel="stylesheet" href="prd-style.css" />
+  </head>
+  <body>
+    <main>
+      <div class="topbar">
+        <div class="top-actions">
+          <a class="back" href="../index.html#works">返回作品</a>
+          <a class="source-link" href="prd-saas-dashboard.md">Markdown 源文件</a>
+        </div>
+        <span class="badge">PRD / SaaS Dashboard</span>
+      </div>
+      <div class="hero">
+        <div>
+          <h1>SaaS 运营数据看板原型</h1>
+          <p class="lead">面向 B 端 SaaS 运营和客户成功团队，用指标、分层、异常提醒和跟进任务支撑续费决策。</p>
+        </div>
+        <div class="summary-card">
+          <strong>2 APIs</strong>
+          <span>覆盖分层数据加载和客户跟进任务写入</span>
+        </div>
+      </div>
+      <nav class="toc">
+        <a href="#background">背景</a>
+        <a href="#goal">目标</a>
+        <a href="#users">用户</a>
+        <a href="#scope">功能</a>
+        <a href="#prototype">Axure</a>
+        <a href="#api">接口</a>
+        <a href="#acceptance">验收</a>
+        <a href="#deploy">测试部署</a>
+      </nav>
+      <div class="doc-grid">
+        <section id="background"><h2>1. 产品背景</h2><p>B 端 SaaS 运营和客户成功团队需要在续费前识别风险客户、查看使用活跃度并创建跟进动作。本作品展示数据产品方向的指标口径、筛选联动、客户分层和后端任务写入。</p></section>
+        <section id="goal"><h2>2. 产品目标</h2><ul><li>用轻量看板呈现客户活跃、续费、风险和响应效率。</li><li>通过客户分层筛选快速定位不同客户群。</li><li>支持点击客户动作创建后端跟进记录。</li></ul></section>
+        <section id="users"><h2>3. 目标用户与核心场景</h2><p>运营查看整体客户活跃和风险情况；客户成功识别需续费访谈或升级处理的客户；产品经理根据数据表现判断下一步迭代方向。</p></section>
+        <section id="scope"><h2>4. 功能需求</h2><h3>客户分层筛选</h3><ul><li>提供全部客户、企业客户、风险客户三个筛选项。</li><li>切换后刷新指标、趋势、客户列表和产品判断。</li></ul><h3>指标看板</h3><ul><li>展示活跃账号、本月续费率、异常客户、平均响应时长。</li><li>指标随客户分层变化。</li></ul><h3>客户列表</h3><ul><li>展示客户名称、当前状态、建议动作。</li><li>点击建议动作后创建后端跟进记录。</li></ul></section>
+        <section id="prototype"><h2>5. Axure 原型设计</h2><div class="flow"><div><span>01</span><strong>筛选器</strong><p>全部、企业、风险客户切换。</p></div><div><span>02</span><strong>指标卡</strong><p>活跃、续费、风险、响应效率。</p></div><div><span>03</span><strong>趋势图</strong><p>近 5 日活跃变化。</p></div><div><span>04</span><strong>客户列表</strong><p>客户、状态、动作。</p></div><div><span>05</span><strong>跟进任务</strong><p>点击动作生成记录。</p></div></div></section>
+        <section id="api"><h2>6. 数据与接口</h2><div class="api-grid"><div class="api-card"><span class="method">GET</span><code>/api/dashboard?segment=all</code><p>按客户分层返回指标、趋势、客户列表和产品判断。</p></div><div class="api-card"><span class="method">POST</span><code>/api/dashboard/followup</code><p>提交 segment、customer、action，创建客户跟进记录。</p></div></div></section>
+        <section id="acceptance"><h2>7. 验收标准</h2><ul class="criteria"><li>点击不同客户分层后，四个指标卡同步变化。</li><li>趋势图、客户列表和产品判断与当前分层一致。</li><li>点击客户动作后，页面新增后端跟进记录。</li><li>接口失败时页面仍可展示 fallback 数据。</li><li>移动端下指标卡、趋势图、客户列表纵向排列。</li></ul></section>
+        <section id="deploy"><h2>8. 测试与部署</h2><p>本地 Node 服务端口为 4173。主要测试覆盖筛选 GET、跟进 POST、列表刷新和移动端布局。部署方式为本地静态页面 + Node HTTP API。</p></section>
+      </div>
+    </main>
+  </body>
+</html>

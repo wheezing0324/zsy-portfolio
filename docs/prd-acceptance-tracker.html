@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PRD | 测试验收与反馈闭环工具</title>
+    <link rel="stylesheet" href="prd-style.css" />
+  </head>
+  <body>
+    <main>
+      <div class="topbar">
+        <div class="top-actions">
+          <a class="back" href="../index.html#works">返回作品</a>
+          <a class="source-link" href="prd-acceptance-tracker.md">Markdown 源文件</a>
+        </div>
+        <span class="badge">PRD / Acceptance Tracker</span>
+      </div>
+      <div class="hero">
+        <div>
+          <h1>测试验收与反馈闭环工具</h1>
+          <p class="lead">模拟产品上线前后的验收协作流程，展示产品经理如何管理验收项、反馈分级和问题闭环。</p>
+        </div>
+        <div class="summary-card">
+          <strong>3 APIs</strong>
+          <span>覆盖验收加载、状态更新和反馈新增</span>
+        </div>
+      </div>
+      <nav class="toc">
+        <a href="#background">背景</a>
+        <a href="#goal">目标</a>
+        <a href="#users">用户</a>
+        <a href="#scope">功能</a>
+        <a href="#prototype">Axure</a>
+        <a href="#api">接口</a>
+        <a href="#acceptance">验收</a>
+        <a href="#deploy">测试部署</a>
+      </nav>
+      <div class="doc-grid">
+        <section id="background"><h2>1. 产品背景</h2><p>目标岗位要求产品经理实习生能参与测试用例设计、功能验收、问题跟踪、反馈收集和产品迭代。本作品用于模拟上线前后的验收协作流程。</p></section>
+        <section id="goal"><h2>2. 产品目标</h2><ul><li>将验收清单、反馈池和统计指标放在同一页面。</li><li>支持勾选验收项并回写后端状态。</li><li>支持新增反馈并刷新反馈池与统计数据。</li></ul></section>
+        <section id="users"><h2>3. 目标用户与核心场景</h2><p>产品经理管理验收标准和迭代优先级；测试同学记录功能是否通过验收；运营和客户成功提交上线后的使用反馈。</p></section>
+        <section id="scope"><h2>4. 功能需求</h2><h3>验收统计</h3><ul><li>展示验收完成数量、待跟进问题、本轮反馈数量。</li><li>统计数据随验收勾选和新增反馈变化。</li></ul><h3>功能验收清单</h3><ul><li>展示功能验收项，支持勾选完成状态。</li><li>勾选后调用后端 PATCH 接口更新状态。</li></ul><h3>反馈与迭代池</h3><ul><li>展示反馈标题、产品判断和处理状态。</li><li>支持 P0、本轮修复、P1、文档补充等状态。</li></ul></section>
+        <section id="prototype"><h2>5. Axure 原型设计</h2><div class="flow"><div><span>01</span><strong>统计卡</strong><p>验收完成、待跟进、本轮反馈。</p></div><div><span>02</span><strong>验收清单</strong><p>功能项和勾选状态。</p></div><div><span>03</span><strong>反馈池</strong><p>标题、判断、状态标签。</p></div><div><span>04</span><strong>新增反馈</strong><p>录入标题、说明和状态。</p></div><div><span>05</span><strong>统计同步</strong><p>新增和勾选后刷新数据。</p></div></div></section>
+        <section id="api"><h2>6. 数据与接口</h2><div class="api-grid"><div class="api-card"><span class="method">GET</span><code>/api/acceptance</code><p>返回验收统计、验收清单和反馈池。</p></div><div class="api-card"><span class="method">PATCH</span><code>/api/acceptance/check</code><p>提交 id 和 done，更新验收项状态。</p></div><div class="api-card"><span class="method">POST</span><code>/api/acceptance/feedback</code><p>提交 title、note、status，新增反馈。</p></div></div></section>
+        <section id="acceptance"><h2>7. 验收标准</h2><ul class="criteria"><li>页面打开后可以从后端加载验收数据。</li><li>勾选验收项后，验收完成数量同步变化。</li><li>新增反馈后，反馈池新增记录，统计数量同步变化。</li><li>接口不可用时页面仍能展示静态 fallback 内容。</li><li>移动端下统计卡、清单、反馈池纵向排列。</li></ul></section>
+        <section id="deploy"><h2>8. 测试与部署</h2><p>本地 Node 服务端口为 4173。主要测试覆盖 GET 数据加载、PATCH 勾选状态、POST 新增反馈和统计同步。部署方式为本地静态页面 + Node HTTP API。</p></section>
+      </div>
+    </main>
+  </body>
+</html>

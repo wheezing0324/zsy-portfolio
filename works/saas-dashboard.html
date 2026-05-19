@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SaaS 运营数据看板原型 | 郑舒予</title>
+    <style>
+      :root {
+        --bg: #f6f4ee;
+        --panel: #ffffff;
+        --ink: #202426;
+        --muted: #66706e;
+        --line: #d9dfdc;
+        --accent: #176b5b;
+        --danger: #b24a3b;
+        --warm: #c47a42;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", sans-serif;
+        line-height: 1.6;
+      }
+      main {
+        width: min(100% - 32px, 1120px);
+        margin: 0 auto;
+        padding: 38px 0 56px;
+      }
+      a { color: inherit; text-decoration: none; }
+      .topbar {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        align-items: center;
+        margin-bottom: 32px;
+      }
+      .back {
+        padding: 10px 14px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        background: var(--panel);
+        color: var(--muted);
+        font-weight: 700;
+      }
+      .top-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      .badge {
+        color: var(--accent);
+        font-size: 0.9rem;
+        font-weight: 800;
+      }
+      h1 {
+        max-width: 840px;
+        margin: 0 0 14px;
+        font-size: clamp(2.2rem, 5vw, 4.6rem);
+        line-height: 1.02;
+      }
+      .lead {
+        max-width: 780px;
+        margin: 0 0 24px;
+        color: var(--muted);
+        font-size: 1.12rem;
+      }
+      .filters {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin: 24px 0;
+      }
+      button {
+        min-height: 40px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        background: var(--panel);
+        color: var(--muted);
+        cursor: pointer;
+        font: inherit;
+        font-weight: 760;
+        padding: 0 14px;
+      }
+      button[aria-pressed="true"] {
+        border-color: var(--accent);
+        background: var(--accent);
+        color: white;
+      }
+      .api-status {
+        display: inline-flex;
+        margin: 0 0 10px;
+        padding: 8px 11px;
+        border: 1px solid rgba(23, 107, 91, 0.22);
+        border-radius: 8px;
+        background: #edf7f3;
+        color: var(--accent);
+        font-size: 0.9rem;
+        font-weight: 760;
+      }
+      .metric-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 14px;
+      }
+      .card, .panel {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+      }
+      .card {
+        padding: 18px;
+      }
+      .card span {
+        display: block;
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+      .card strong {
+        display: block;
+        margin-top: 8px;
+        color: var(--accent);
+        font-size: 2rem;
+        line-height: 1;
+      }
+      .layout {
+        display: grid;
+        grid-template-columns: 1.1fr 0.9fr;
+        gap: 18px;
+        margin-top: 18px;
+      }
+      .panel {
+        padding: 22px;
+      }
+      h2, h3 { margin: 0 0 12px; }
+      .bars {
+        display: grid;
+        gap: 12px;
+      }
+      .bar-row {
+        display: grid;
+        grid-template-columns: 84px minmax(0, 1fr) 52px;
+        gap: 10px;
+        align-items: center;
+        color: var(--muted);
+        font-size: 0.92rem;
+      }
+      .track {
+        height: 12px;
+        border-radius: 999px;
+        background: #e9eeeb;
+        overflow: hidden;
+      }
+      .bar {
+        height: 100%;
+        border-radius: inherit;
+        background: var(--accent);
+      }
+      .alert {
+        padding: 14px;
+        border: 1px solid rgba(178, 74, 59, 0.28);
+        border-radius: 8px;
+        background: #fff7f5;
+        color: var(--danger);
+        margin-top: 10px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.94rem;
+      }
+      th, td {
+        padding: 12px 8px;
+        border-bottom: 1px solid var(--line);
+        text-align: left;
+      }
+      th { color: var(--muted); }
+      .followup-button {
+        min-height: 34px;
+        padding: 0 10px;
+        font-size: 0.86rem;
+      }
+      .followup-list {
+        display: grid;
+        gap: 8px;
+        margin-top: 16px;
+      }
+      .followup-list div {
+        padding: 10px;
+        border-radius: 8px;
+        background: #edf7f3;
+        color: var(--accent);
+        font-size: 0.88rem;
+        font-weight: 720;
+      }
+      @media (max-width: 860px) {
+        .metric-grid, .layout { grid-template-columns: 1fr; }
+        .topbar { align-items: flex-start; flex-direction: column; }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="topbar">
+        <div class="top-actions">
+          <a class="back" href="../index.html#works">返回主页</a>
+          <a class="back" href="../docs/prd-saas-dashboard.html">查看 PRD</a>
+        </div>
+        <span class="badge">Vibe Coding Demo / Data Product</span>
+      </div>
+      <h1>SaaS 运营数据看板原型</h1>
+      <p class="lead">
+        这个原型面向 B 端 SaaS 的运营和客户成功团队，展示如何用指标、筛选、异常提醒和客户分层支撑续费与风险跟进。
+      </p>
+      <div class="api-status" id="api-status">正在连接后端 API...</div>
+
+      <div class="filters" aria-label="customer segment filters">
+        <button type="button" data-segment="all" aria-pressed="true">全部客户</button>
+        <button type="button" data-segment="enterprise" aria-pressed="false">企业客户</button>
+        <button type="button" data-segment="risk" aria-pressed="false">风险客户</button>
+      </div>
+
+      <section class="metric-grid" aria-label="dashboard metrics">
+        <div class="card"><span>活跃账号</span><strong data-value="active">12,480</strong></div>
+        <div class="card"><span>本月续费率</span><strong data-value="renewal">86%</strong></div>
+        <div class="card"><span>异常客户</span><strong data-value="risk">18</strong></div>
+        <div class="card"><span>平均响应时长</span><strong data-value="sla">2.4h</strong></div>
+      </section>
+
+      <section class="layout">
+        <div class="panel">
+          <h2>使用活跃度趋势</h2>
+          <div class="bars">
+            <div class="bar-row"><span>周一</span><div class="track"><div class="bar" style="width: 72%"></div></div><span>72%</span></div>
+          </div>
+          <div class="alert" data-insight>产品判断：风险客户应优先看“近 7 日活跃下降 + 工单响应超时”的组合信号，而不是只看单一登录次数。</div>
+        </div>
+        <div class="panel">
+          <h2>客户分层列表</h2>
+          <table>
+            <thead>
+              <tr><th>客户</th><th>状态</th><th>动作</th></tr>
+            </thead>
+            <tbody data-customers></tbody>
+          </table>
+          <div class="followup-list" data-followups></div>
+        </div>
+      </section>
+    </main>
+    <script>
+      const fallbackData = {
+        metrics: { active: "12,480", renewal: "86%", risk: "18", sla: "2.4h" },
+        trend: [72, 78, 65, 83, 74],
+        customers: [
+          ["华东零售 A", "活跃下降", "续费访谈"],
+          ["交通集团 B", "工单超时", "升级处理"],
+          ["金融机构 C", "稳定使用", "案例沉淀"]
+        ],
+        insight: "风险客户应优先看“近 7 日活跃下降 + 工单响应超时”的组合信号，而不是只看单一登录次数。"
+      };
+      const keys = ["active", "renewal", "risk", "sla"];
+      let currentSegment = "all";
+      let currentDashboard = fallbackData;
+      const apiStatus = document.getElementById("api-status");
+
+      const setApiStatus = (message) => {
+        apiStatus.textContent = message;
+      };
+
+      const renderDashboard = (data) => {
+        currentDashboard = data;
+        keys.forEach((key) => {
+          document.querySelector(`[data-value="${key}"]`).textContent = data.metrics[key];
+        });
+        const days = ["周一", "周二", "周三", "周四", "周五"];
+        document.querySelector(".bars").innerHTML = data.trend
+          .map(
+            (value, index) =>
+              `<div class="bar-row"><span>${days[index]}</span><div class="track"><div class="bar" style="width: ${value}%"></div></div><span>${value}%</span></div>`
+          )
+          .join("");
+        document.querySelector("[data-insight]").textContent = `产品判断：${data.insight}`;
+        document.querySelector("[data-customers]").innerHTML = data.customers
+          .map(
+            (row) =>
+              `<tr><td>${row[0]}</td><td>${row[1]}</td><td><button class="followup-button" type="button" data-customer="${row[0]}" data-action="${row[2]}">${row[2]}</button></td></tr>`
+          )
+          .join("");
+        document.querySelector("[data-followups]").innerHTML = (data.followups || [])
+          .slice(0, 4)
+          .map((item) => `<div>后端跟进记录：${item.customer} / ${item.action}</div>`)
+          .join("");
+
+        document.querySelectorAll("[data-customer]").forEach((button) => {
+          button.addEventListener("click", () => createFollowup(button.dataset.customer, button.dataset.action));
+        });
+      };
+
+      const loadSegment = async (segment) => {
+        currentSegment = segment;
+        setApiStatus(`GET /api/dashboard?segment=${segment} 请求中...`);
+        try {
+          const response = await fetch(`/api/dashboard?segment=${segment}`);
+          renderDashboard(await response.json());
+          setApiStatus(`GET /api/dashboard?segment=${segment} 已从后端加载`);
+        } catch {
+          renderDashboard(fallbackData);
+          setApiStatus("未连接后端，当前使用静态 fallback 数据");
+        }
+      };
+
+      const createFollowup = async (customer, action) => {
+        setApiStatus(`POST /api/dashboard/followup 创建 ${customer} 跟进中...`);
+        try {
+          const response = await fetch("/api/dashboard/followup", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ segment: currentSegment, customer, action })
+          });
+          renderDashboard(await response.json());
+          setApiStatus(`POST /api/dashboard/followup 已写入：${customer}`);
+        } catch {
+          currentDashboard.followups = [
+            { customer, action },
+            ...(currentDashboard.followups || [])
+          ];
+          renderDashboard(currentDashboard);
+          setApiStatus("离线静态模式：跟进记录只保存在当前页面");
+        }
+      };
+
+      document.querySelectorAll("[data-segment]").forEach((button) => {
+        button.addEventListener("click", () => {
+          document.querySelectorAll("[data-segment]").forEach((item) => item.setAttribute("aria-pressed", "false"));
+          button.setAttribute("aria-pressed", "true");
+          loadSegment(button.dataset.segment);
+        });
+      });
+
+      loadSegment("all");
+    </script>
+  </body>
+</html>

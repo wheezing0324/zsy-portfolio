@@ -1,0 +1,12 @@
+{
+  "name": "zsy-portfolio",
+  "version": "1.0.0",
+  "private": true,
+  "description": "郑舒予的 AI 产品经理求职主页与 Vibe Coding 作品集。",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

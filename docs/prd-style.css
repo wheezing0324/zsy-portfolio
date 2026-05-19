@@ -1,0 +1,265 @@
+:root {
+  color-scheme: light;
+  --bg: #f6f4ee;
+  --panel: #ffffff;
+  --ink: #202426;
+  --muted: #66706e;
+  --line: #d9dfdc;
+  --accent: #176b5b;
+  --accent-soft: #e2eee9;
+  --warm: #c47a42;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background:
+    linear-gradient(180deg, rgba(226, 238, 233, 0.82), transparent 340px),
+    var(--bg);
+  color: var(--ink);
+  font-family:
+    ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    "PingFang SC", "Microsoft YaHei", sans-serif;
+  line-height: 1.65;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+main {
+  width: min(100% - 32px, 1080px);
+  margin: 0 auto;
+  padding: 34px 0 60px;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 34px;
+}
+
+.top-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.back,
+.source-link {
+  display: inline-flex;
+  min-height: 40px;
+  align-items: center;
+  padding: 0 14px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--panel);
+  color: var(--muted);
+  font-weight: 760;
+}
+
+.badge {
+  color: var(--accent);
+  font-size: 0.9rem;
+  font-weight: 820;
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 280px;
+  gap: 28px;
+  align-items: end;
+  margin-bottom: 24px;
+}
+
+h1 {
+  max-width: 780px;
+  margin: 0 0 16px;
+  font-size: clamp(2.35rem, 5vw, 4.7rem);
+  line-height: 1.02;
+  letter-spacing: 0;
+}
+
+.lead {
+  max-width: 760px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 1.08rem;
+}
+
+.summary-card {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.86);
+  padding: 18px;
+}
+
+.summary-card strong {
+  display: block;
+  color: var(--accent);
+  font-size: 1.55rem;
+  line-height: 1;
+}
+
+.summary-card span {
+  display: block;
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.toc {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 22px 0 26px;
+}
+
+.toc a {
+  padding: 7px 10px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: #0f4e43;
+  font-size: 0.86rem;
+  font-weight: 760;
+}
+
+.doc-grid {
+  display: grid;
+  gap: 16px;
+}
+
+section {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  padding: 24px;
+}
+
+h2 {
+  margin: 0 0 12px;
+  font-size: clamp(1.35rem, 2.2vw, 2rem);
+  line-height: 1.16;
+}
+
+h3 {
+  margin: 20px 0 8px;
+  font-size: 1.04rem;
+}
+
+p {
+  margin: 0 0 12px;
+  color: var(--muted);
+}
+
+p:last-child {
+  margin-bottom: 0;
+}
+
+ul {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding-left: 20px;
+  color: var(--muted);
+}
+
+.flow {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.flow div,
+.api-card,
+.criteria li {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fbfcfb;
+}
+
+.flow div {
+  min-height: 132px;
+  padding: 14px;
+}
+
+.flow span {
+  color: var(--warm);
+  font-size: 0.78rem;
+  font-weight: 820;
+}
+
+.flow strong {
+  display: block;
+  margin: 6px 0;
+}
+
+.flow p {
+  font-size: 0.9rem;
+}
+
+.api-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.api-card {
+  padding: 14px;
+}
+
+.method {
+  color: var(--warm);
+  font-size: 0.78rem;
+  font-weight: 820;
+}
+
+code {
+  display: inline-block;
+  margin: 4px 0 8px;
+  color: var(--accent);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.9rem;
+  font-weight: 760;
+}
+
+.criteria {
+  padding-left: 0;
+  list-style: none;
+}
+
+.criteria li {
+  padding: 12px 14px;
+}
+
+@media (max-width: 820px) {
+  main {
+    width: min(100% - 24px, 1080px);
+    padding-top: 24px;
+  }
+
+  .topbar,
+  .hero {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+
+  .topbar {
+    flex-direction: column;
+  }
+
+  .summary-card {
+    width: 100%;
+  }
+
+  .flow,
+  .api-grid {
+    grid-template-columns: 1fr;
+  }
+}
