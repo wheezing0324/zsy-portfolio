@@ -1627,8 +1627,10 @@
       let currentLang = "zh";
       let homepageState = null;
       const contentStorageKey = "zsy-portfolio-copy-overrides";
+      const contentPinStorageKey = "zsy-portfolio-content-pin";
       const windowStoragePrefix = "zsyPortfolioCopyOverrides:";
       let contentOverrides = {};
+      let remoteContentReady = false;
 
       const readContentOverrides = () => {
         try {
@@ -1665,8 +1667,65 @@
         });
       };
 
+      const mergeContentOverrides = (nextContent) => {
+        ["zh", "en"].forEach((lang) => {
+          contentOverrides[lang] = {
+            ...(contentOverrides[lang] || {}),
+            ...(nextContent?.[lang] || {})
+          };
+        });
+        applyContentOverrides();
+      };
+
       contentOverrides = readContentOverrides();
       applyContentOverrides();
+
+      const loadRemoteContent = async () => {
+        try {
+          const response = await fetch("/api/content", { cache: "no-store" });
+          if (!response.ok) {
+            throw new Error("Content API failed");
+          }
+          const result = await response.json();
+          if (result.content) {
+            mergeContentOverrides(result.content);
+            applyLanguage(currentLang);
+          }
+          remoteContentReady = result.storage === "kv";
+        } catch (error) {
+          remoteContentReady = false;
+        }
+      };
+
+      const publishContentOverrides = async () => {
+        let savedPin = "";
+        try {
+          savedPin = localStorage.getItem(contentPinStorageKey) || "";
+        } catch (error) {
+          savedPin = "";
+        }
+        const pin =
+          savedPin ||
+          window.prompt("请输入编辑发布密码。配置 Cloudflare 环境变量 CONTENT_ADMIN_PIN 后可用。");
+        if (!pin) {
+          return { ok: false, error: "missing-pin" };
+        }
+
+        const response = await fetch("/api/content", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ pin, content: contentOverrides })
+        });
+        if (!response.ok) {
+          return { ok: false, error: response.status };
+        }
+        try {
+          localStorage.setItem(contentPinStorageKey, pin);
+        } catch (error) {
+          window.name = `${windowStoragePrefix}${JSON.stringify(contentOverrides)}`;
+        }
+        return { ok: true };
+      };
 
       const applyLanguage = (lang) => {
         currentLang = lang;
@@ -1710,7 +1769,7 @@
         toolbar.setAttribute("role", "status");
         toolbar.innerHTML = `
           <p data-edit-note>编辑模式：直接点击页面文字修改，当前为中文。</p>
-          <button type="button" data-edit-action="save">保存修改</button>
+          <button type="button" data-edit-action="save">保存并同步</button>
           <button type="button" data-edit-action="reset">清空本轮修改</button>
           <button type="button" data-edit-action="exit">退出编辑</button>
         `;
@@ -1772,7 +1831,15 @@
           const action = button.dataset.editAction;
           if (action === "save") {
             collectInlineText();
-            updateNote("已保存到本浏览器，并立即更新当前页面。");
+            updateNote("已保存到本浏览器，正在同步到线上...");
+            publishContentOverrides().then((result) => {
+              if (result.ok) {
+                remoteContentReady = true;
+                updateNote("已同步到线上，其他浏览器刷新后也会看到。");
+              } else {
+                updateNote("已保存到本浏览器；线上同步需要先配置 Cloudflare KV 和发布密码。");
+              }
+            });
           }
           if (action === "reset") {
             pendingEdits = {};
@@ -1945,6 +2012,7 @@
       applyLanguage("zh");
       setupContactForm();
       createInlineEditor();
+      loadRemoteContent();
       loadHomepageState();
     </script>
   </body>

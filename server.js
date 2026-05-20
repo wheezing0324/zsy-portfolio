@@ -139,6 +139,23 @@ const acceptanceState = {
 
 const dashboardFollowups = [];
 const baseFeedbackCount = 9;
+let homepageContent = {};
+
+const sanitizeContent = (value) => {
+  const output = {};
+  ["zh", "en"].forEach((lang) => {
+    if (!value?.[lang] || typeof value[lang] !== "object") {
+      return;
+    }
+    output[lang] = {};
+    Object.entries(value[lang]).forEach(([key, text]) => {
+      if (typeof key === "string" && typeof text === "string") {
+        output[lang][key.slice(0, 80)] = text.trim().slice(0, 1200);
+      }
+    });
+  });
+  return output;
+};
 
 const mimeTypes = {
   ".html": "text/html; charset=utf-8",
@@ -233,6 +250,26 @@ const server = http.createServer(async (request, response) => {
     if (request.method === "GET" && url.pathname === "/api/profile") {
       homepage.views += 1;
       sendJson(response, 200, getHomepagePayload());
+      return;
+    }
+
+    if (request.method === "GET" && url.pathname === "/api/content") {
+      sendJson(response, 200, {
+        content: homepageContent,
+        writable: true,
+        storage: "local-memory"
+      });
+      return;
+    }
+
+    if (request.method === "POST" && url.pathname === "/api/content") {
+      const body = await readBody(request);
+      homepageContent = sanitizeContent(body.content || {});
+      sendJson(response, 200, {
+        ok: true,
+        content: homepageContent,
+        storage: "local-memory"
+      });
       return;
     }
 

@@ -39,7 +39,34 @@ Cloudflare Pages 会自动识别 `functions/` 目录。本项目已提供：
 - `/api/acceptance`
 - `/api/acceptance/check`
 - `/api/acceptance/feedback`
+- `/api/content`
 
 ## 数据持久化说明
 
 当前 API 使用内存数据，适合作品集演示。Cloudflare 的运行环境可能在不同请求之间重启，因此不要把它当作长期数据库。如果后续要真正收集联系信息，可以接 Cloudflare D1 或 KV。
+
+## 让首页编辑内容同步到所有浏览器
+
+首页编辑模式会调用 `/api/content`。要让修改后的文案被其他浏览器同步看到，需要在 Cloudflare Pages 里配置 KV：
+
+1. 打开 Cloudflare Dashboard。
+2. 进入 `Workers & Pages` -> `KV`，新建一个 namespace，例如 `zsy_portfolio_content`。
+3. 回到 Pages 项目 `zsy-portfolio`。
+4. 进入 `Settings` -> `Functions` -> `KV namespace bindings`。
+5. 添加 binding：
+
+```text
+Variable name: PORTFOLIO_CONTENT
+KV namespace: zsy_portfolio_content
+```
+
+6. 进入 `Settings` -> `Environment variables`，添加编辑发布密码：
+
+```text
+Variable name: CONTENT_ADMIN_PIN
+Value: 自己设置一个密码，例如 6-12 位数字或字母
+```
+
+7. 重新部署一次 Cloudflare Pages。
+
+配置完成后，打开 `https://zsy-portfolio.pages.dev/?edit=1`，点击「保存并同步」，输入 `CONTENT_ADMIN_PIN`，刷新其他浏览器即可看到同步后的内容。
