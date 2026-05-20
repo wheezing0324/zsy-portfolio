@@ -60,13 +60,13 @@ Variable name: PORTFOLIO_CONTENT
 KV namespace: zsy_portfolio_content
 ```
 
-6. 进入 `Settings` -> `Environment variables`，添加编辑发布密码：
+6. 发布密码默认是 `zsy2026`。如果想以后换密码，可以进入 `Settings` -> `Environment variables`，添加：
 
 ```text
 Variable name: CONTENT_ADMIN_PIN
-Value: 自己设置一个密码，例如 6-12 位数字或字母
+Value: 自己设置的新密码，例如 6-12 位数字或字母
 ```
 
 7. 重新部署一次 Cloudflare Pages。
 
-配置完成后，打开 `https://zsy-portfolio.pages.dev/?edit=1`，点击「保存并同步」，输入 `CONTENT_ADMIN_PIN`，刷新其他浏览器即可看到同步后的内容。
+配置完成后，打开 `https://zsy-portfolio.pages.dev/?edit=1`，点击「保存并同步」，输入 `zsy2026`，刷新其他浏览器即可看到同步后的内容。

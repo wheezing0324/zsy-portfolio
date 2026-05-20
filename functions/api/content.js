@@ -1,6 +1,7 @@
 import { json, readJson } from "./_data.js";
 
 const contentKey = "homepage-copy-overrides";
+const defaultAdminPin = "zsy2026";
 
 const sanitizeContent = (value) => {
   const output = {};
@@ -29,7 +30,7 @@ export const onRequestGet = async ({ env }) => {
   const saved = await store.get(contentKey, "json");
   return json({
     content: sanitizeContent(saved || {}),
-    writable: Boolean(env.CONTENT_ADMIN_PIN),
+    writable: true,
     storage: "kv"
   });
 };
@@ -39,12 +40,10 @@ export const onRequestPost = async ({ request, env }) => {
   if (!store?.put) {
     return json({ error: "Cloudflare KV binding PORTFOLIO_CONTENT is not configured" }, 501);
   }
-  if (!env.CONTENT_ADMIN_PIN) {
-    return json({ error: "CONTENT_ADMIN_PIN is not configured" }, 501);
-  }
 
   const body = await readJson(request);
-  if (String(body.pin || "") !== String(env.CONTENT_ADMIN_PIN)) {
+  const adminPin = String(env.CONTENT_ADMIN_PIN || defaultAdminPin);
+  if (String(body.pin || "") !== adminPin) {
     return json({ error: "Invalid edit password" }, 401);
   }
 

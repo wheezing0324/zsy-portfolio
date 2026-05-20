@@ -1710,7 +1710,7 @@
         }
         const pin =
           savedPin ||
-          window.prompt("请输入编辑发布密码。配置 Cloudflare 环境变量 CONTENT_ADMIN_PIN 后可用。");
+          window.prompt("请输入编辑发布密码。默认密码为 zsy2026。");
         if (!pin) {
           return { ok: false, message: "未输入发布密码，修改只保存在当前浏览器。" };
         }
@@ -1741,7 +1741,7 @@
             return {
               ok: false,
               message:
-                "线上同步未成功：Cloudflare 还没有配置 KV 绑定 PORTFOLIO_CONTENT 或环境变量 CONTENT_ADMIN_PIN。"
+                "线上同步未成功：Cloudflare 还没有配置 KV 绑定 PORTFOLIO_CONTENT。"
             };
           }
           return {
