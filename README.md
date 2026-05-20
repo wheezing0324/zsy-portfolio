@@ -30,3 +30,9 @@ http://127.0.0.1:4173
 - Environment Variable: `HOST=0.0.0.0`
 
 详细步骤见 `DEPLOY.md`。
+
+## Cloudflare Pages 部署
+
+如果 Render 要求绑卡，可以使用 Cloudflare Pages。项目已包含 `functions/` 目录，Cloudflare Pages 会自动把它部署为 `/api/*` 接口。
+
+详细步骤见 `CLOUDFLARE.md`。
