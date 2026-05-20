@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>原型设计 | 客户需求到 PRD 工作台</title>
+    <link rel="stylesheet" href="prototype-style.css" />
+  </head>
+  <body>
+    <main>
+      <div class="topbar">
+        <div class="top-actions">
+          <a class="back" href="../index.html#works">返回主页</a>
+          <a class="back" href="../works/requirement-workbench.html">打开作品</a>
+          <a class="back" href="../docs/prd-requirement-workbench.html">查看 PRD</a>
+        </div>
+        <span class="badge">Axure Prototype / PRD Workspace</span>
+      </div>
+      <h1>客户需求到 PRD 工作台原型</h1>
+      <p class="lead">目标是让产品经理从客户反馈出发，完成需求评分、用户故事、PRD 摘要和验收标准维护。原型采用左侧输入、右侧文档、底部输出物的布局。</p>
+
+      <section class="meta-grid">
+        <div class="meta-card"><span>核心用户</span><strong>产品经理 / 客户成功 / 测试</strong></div>
+        <div class="meta-card"><span>关键动作</span><strong>录入反馈 -> 评分 -> 生成 PRD</strong></div>
+        <div class="meta-card"><span>交互重点</span><strong>Tab 切换 + 状态回写</strong></div>
+      </section>
+
+      <h2 class="section-title">页面线框</h2>
+      <section class="screen-grid">
+        <article class="screen">
+          <div class="screen-header"><span>页面 A</span><span>反馈录入</span></div>
+          <div class="wireframe">
+            <div class="wire-box">顶部：反馈数量 / P0 需求 / PRD 完整度</div>
+            <div class="wire-table">
+              <div>反馈卡：角色 + 场景 + 原始需求</div>
+              <div>评分标签：业务价值 / 紧急程度 / 复杂度</div>
+              <div>优先级标签：P0 / P1 / P2</div>
+            </div>
+            <div class="wire-box">新增反馈表单：角色、场景、反馈内容</div>
+            <div class="wire-row">
+              <div class="wire-button">业务价值</div>
+              <div class="wire-button">紧急程度</div>
+              <div class="wire-button">复杂度</div>
+            </div>
+          </div>
+        </article>
+        <article class="screen">
+          <div class="screen-header"><span>页面 B</span><span>PRD 摘要</span></div>
+          <div class="wireframe">
+            <div class="wire-row">
+              <div class="wire-button">功能范围</div>
+              <div class="wire-button">流程设计</div>
+              <div class="wire-button">验收标准</div>
+            </div>
+            <div class="wire-box">功能范围：P0 活跃度、P0 导出、P1 异常提醒</div>
+            <div class="wire-box">流程设计：入口、动作、产出物</div>
+            <div class="wire-table">
+              <div>验收项 1：筛选联动</div>
+              <div>验收项 2：导出字段</div>
+              <div>验收项 3：空状态说明</div>
+            </div>
+          </div>
+        </article>
+        <article class="screen">
+          <div class="screen-header"><span>页面 C</span><span>输出物</span></div>
+          <div class="wireframe">
+            <div class="wire-box">用户故事：作为客户成功，我希望快速识别风险客户</div>
+            <div class="wire-box">版本计划：本轮版本 / 下一版 / 暂缓事项</div>
+            <div class="wire-box">风险提示：导出字段口径待确认</div>
+            <div class="wire-button">复制 PRD 摘要</div>
+          </div>
+        </article>
+      </section>
+
+      <h2 class="section-title">交互说明</h2>
+      <section class="panel">
+        <ul class="flow-list">
+          <li><strong>新增反馈：</strong>提交后刷新反馈池、P0 数量、用户故事和 PRD 完整度。</li>
+          <li><strong>需求评分：</strong>优先级 = 业务价值 + 紧急程度 - 实现复杂度。</li>
+          <li><strong>Tab 切换：</strong>不跳页，仅切换 PRD 摘要区域内容。</li>
+          <li><strong>验收勾选：</strong>勾选后调用 PATCH 接口，状态回写并刷新报告。</li>
+        </ul>
+      </section>
+    </main>
+  </body>
+</html>

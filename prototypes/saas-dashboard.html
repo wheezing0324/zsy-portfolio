@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>原型设计 | SaaS 运营数据看板</title>
+    <link rel="stylesheet" href="prototype-style.css" />
+  </head>
+  <body>
+    <main>
+      <div class="topbar">
+        <div class="top-actions">
+          <a class="back" href="../index.html#works">返回主页</a>
+          <a class="back" href="../works/saas-dashboard.html">打开作品</a>
+          <a class="back" href="../docs/prd-saas-dashboard.html">查看 PRD</a>
+        </div>
+        <span class="badge">Axure Prototype / SaaS Dashboard</span>
+      </div>
+      <h1>SaaS 运营数据看板原型</h1>
+      <p class="lead">原型面向运营和客户成功，重点验证筛选联动、风险识别、客户详情、跟进任务和导出清单的工作流。</p>
+
+      <section class="meta-grid">
+        <div class="meta-card"><span>核心用户</span><strong>运营 / 客户成功</strong></div>
+        <div class="meta-card"><span>关键动作</span><strong>筛选客户 -> 创建跟进 -> 导出清单</strong></div>
+        <div class="meta-card"><span>交互重点</span><strong>数据联动 + 任务生成</strong></div>
+      </section>
+
+      <h2 class="section-title">页面线框</h2>
+      <section class="screen-grid">
+        <article class="screen">
+          <div class="screen-header"><span>页面 A</span><span>总览看板</span></div>
+          <div class="wireframe">
+            <div class="wire-row">
+              <div class="wire-button">全部客户</div>
+              <div class="wire-button">企业客户</div>
+              <div class="wire-button">风险客户</div>
+            </div>
+            <div class="wire-row">
+              <div class="wire-box">活跃账号</div>
+              <div class="wire-box">续费率</div>
+              <div class="wire-box">异常客户</div>
+            </div>
+            <div class="wire-chart">
+              <div class="bar"><span style="width:72%"></span></div>
+              <div class="bar"><span style="width:78%"></span></div>
+              <div class="bar"><span style="width:65%"></span></div>
+              <div class="bar"><span style="width:83%"></span></div>
+            </div>
+          </div>
+        </article>
+        <article class="screen">
+          <div class="screen-header"><span>页面 B</span><span>客户列表</span></div>
+          <div class="wireframe">
+            <div class="wire-table">
+              <div>华东零售 A｜活跃下降｜续费访谈</div>
+              <div>交通集团 B｜工单超时｜升级处理</div>
+              <div>金融机构 C｜稳定使用｜案例沉淀</div>
+            </div>
+            <div class="wire-box">客户详情：风险原因、影响范围、负责人、截止时间</div>
+            <div class="wire-button">创建跟进任务</div>
+          </div>
+        </article>
+        <article class="screen">
+          <div class="screen-header"><span>页面 C</span><span>导出清单</span></div>
+          <div class="wireframe">
+            <div class="wire-box">指标口径：活跃账号、风险客户、响应时长</div>
+            <div class="wire-table">
+              <div>客户｜状态｜动作｜负责人｜截止</div>
+              <div>华东零售 A｜活跃下降｜续费访谈｜客户成功｜48h</div>
+            </div>
+            <div class="wire-button">生成续费跟进清单</div>
+          </div>
+        </article>
+      </section>
+
+      <h2 class="section-title">交互说明</h2>
+      <section class="panel">
+        <ul class="flow-list">
+          <li><strong>分层筛选：</strong>点击筛选器后刷新指标卡、趋势图、客户列表和详情。</li>
+          <li><strong>创建跟进：</strong>点击客户动作后调用 POST 接口，生成后端跟进记录。</li>
+          <li><strong>导出清单：</strong>根据当前客户列表生成可复制的续费沟通材料。</li>
+          <li><strong>异常判断：</strong>风险客户优先看活跃下降 + 工单超时组合信号。</li>
+        </ul>
+      </section>
+    </main>
+  </body>
+</html>

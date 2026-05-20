@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>原型设计 | 测试验收与反馈闭环工具</title>
+    <link rel="stylesheet" href="prototype-style.css" />
+  </head>
+  <body>
+    <main>
+      <div class="topbar">
+        <div class="top-actions">
+          <a class="back" href="../index.html#works">返回主页</a>
+          <a class="back" href="../works/acceptance-tracker.html">打开作品</a>
+          <a class="back" href="../docs/prd-acceptance-tracker.html">查看 PRD</a>
+        </div>
+        <span class="badge">Axure Prototype / Acceptance Tracker</span>
+      </div>
+      <h1>测试验收与反馈闭环工具原型</h1>
+      <p class="lead">原型重点验证验收清单 CRUD、反馈筛选、发布决策和测试报告生成，帮助产品经理判断功能是否可以发布。</p>
+
+      <section class="meta-grid">
+        <div class="meta-card"><span>核心用户</span><strong>产品经理 / 测试 / 运营</strong></div>
+        <div class="meta-card"><span>关键动作</span><strong>维护清单 -> 收集反馈 -> 发布判断</strong></div>
+        <div class="meta-card"><span>交互重点</span><strong>CRUD + 报告同步</strong></div>
+      </section>
+
+      <h2 class="section-title">页面线框</h2>
+      <section class="screen-grid">
+        <article class="screen">
+          <div class="screen-header"><span>页面 A</span><span>验收总览</span></div>
+          <div class="wireframe">
+            <div class="wire-row">
+              <div class="wire-box">验收完成 3/5</div>
+              <div class="wire-box">待跟进问题 4</div>
+              <div class="wire-box">本轮反馈 12</div>
+            </div>
+            <div class="wire-table">
+              <div>验收项｜勾选｜编辑｜删除</div>
+              <div>筛选同步刷新｜已完成｜编辑｜删除</div>
+              <div>导出失败重试｜未完成｜编辑｜删除</div>
+            </div>
+            <div class="wire-button">新增验收项</div>
+          </div>
+        </article>
+        <article class="screen">
+          <div class="screen-header"><span>页面 B</span><span>反馈闭环</span></div>
+          <div class="wireframe">
+            <div class="wire-row">
+              <div class="wire-button">全部</div>
+              <div class="wire-button">阻塞项</div>
+              <div class="wire-button">下一版</div>
+            </div>
+            <div class="wire-table">
+              <div>P0：风险原因枚举与接口不一致</div>
+              <div>P1：导出字段保存为模板</div>
+              <div>文档补充：一页使用说明</div>
+            </div>
+            <div class="wire-box">新增反馈表单：标题、说明、状态</div>
+          </div>
+        </article>
+        <article class="screen">
+          <div class="screen-header"><span>页面 C</span><span>发布决策</span></div>
+          <div class="wireframe">
+            <div class="wire-box">发布结论：暂缓发布 / 可以发布</div>
+            <div class="wire-box">原因：未完成验收项数量 + P0 反馈数量</div>
+            <div class="wire-table">
+              <div>测试报告</div>
+              <div>通过项、未完成项、反馈数量、发布结论</div>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <h2 class="section-title">交互说明</h2>
+      <section class="panel">
+        <ul class="flow-list">
+          <li><strong>清单 CRUD：</strong>新增、编辑、删除、勾选验收项后，同步刷新统计和报告。</li>
+          <li><strong>反馈筛选：</strong>按全部、阻塞项、下一版、文档补充切换反馈池。</li>
+          <li><strong>发布决策：</strong>存在未完成项或 P0 反馈时显示暂缓发布。</li>
+          <li><strong>测试报告：</strong>自动汇总通过项、未完成项、反馈数量和发布结论。</li>
+        </ul>
+      </section>
+    </main>
+  </body>
+</html>
