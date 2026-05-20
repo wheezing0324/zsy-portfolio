@@ -140,6 +140,7 @@ const acceptanceState = {
 const dashboardFollowups = [];
 const baseFeedbackCount = 9;
 let homepageContent = {};
+const defaultAdminPin = "zsy2026";
 
 const sanitizeContent = (value) => {
   const output = {};
@@ -270,6 +271,17 @@ const server = http.createServer(async (request, response) => {
         content: homepageContent,
         storage: "local-memory"
       });
+      return;
+    }
+
+    if (request.method === "POST" && url.pathname === "/api/content/verify") {
+      const body = await readBody(request);
+      const adminPin = String(process.env.CONTENT_ADMIN_PIN || defaultAdminPin);
+      if (String(body.pin || "") !== adminPin) {
+        sendJson(response, 401, { ok: false, error: "Invalid edit password" });
+        return;
+      }
+      sendJson(response, 200, { ok: true });
       return;
     }
 

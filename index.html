@@ -1628,6 +1628,7 @@
       let homepageState = null;
       const contentStorageKey = "zsy-portfolio-copy-overrides";
       const contentPinStorageKey = "zsy-portfolio-content-pin";
+      const contentEditAccessKey = "zsy-portfolio-edit-access";
       const windowStoragePrefix = "zsyPortfolioCopyOverrides:";
       let contentOverrides = {};
       let remoteContentReady = false;
@@ -1699,6 +1700,63 @@
 
       const showSyncAlert = (message) => {
         window.alert(message);
+      };
+
+      const cleanEditUrl = () => {
+        const cleanUrl = `${window.location.pathname}${window.location.hash || ""}`;
+        try {
+          window.history.replaceState({}, "", cleanUrl);
+        } catch (error) {
+          window.location.hash = window.location.hash;
+        }
+      };
+
+      const verifyEditAccess = async (pin) => {
+        if (window.location.protocol === "file:") {
+          return pin === "zsy2026";
+        }
+
+        try {
+          const response = await fetch("/api/content/verify", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ pin })
+          });
+          return response.ok;
+        } catch (error) {
+          return false;
+        }
+      };
+
+      const requestEditAccess = async () => {
+        try {
+          if (sessionStorage.getItem(contentEditAccessKey) === "true") {
+            return true;
+          }
+        } catch (error) {
+          // Continue to prompt if session storage is unavailable.
+        }
+
+        const pin = window.prompt("请输入编辑密码。");
+        if (!pin) {
+          cleanEditUrl();
+          return false;
+        }
+
+        const ok = await verifyEditAccess(pin);
+        if (!ok) {
+          window.alert("编辑密码不正确，无法进入编辑模式。");
+          cleanEditUrl();
+          return false;
+        }
+
+        try {
+          sessionStorage.setItem(contentEditAccessKey, "true");
+          localStorage.setItem(contentPinStorageKey, pin);
+        } catch (error) {
+          window.name = `${windowStoragePrefix}${JSON.stringify(contentOverrides)}`;
+        }
+        return true;
       };
 
       const publishContentOverrides = async () => {
@@ -1787,9 +1845,13 @@
         renderHomepageState();
       };
 
-      const createInlineEditor = () => {
+      const createInlineEditor = async () => {
         const params = new URLSearchParams(window.location.search);
         if (params.get("edit") !== "1") {
+          return;
+        }
+        const hasAccess = await requestEditAccess();
+        if (!hasAccess) {
           return;
         }
 
@@ -1912,12 +1974,7 @@
           document.removeEventListener("click", handleToolbarClick, true);
           toolbar.remove();
 
-          const cleanUrl = `${window.location.pathname}${window.location.hash || ""}`;
-          try {
-            window.history.replaceState({}, "", cleanUrl);
-          } catch (error) {
-            window.location.hash = window.location.hash;
-          }
+          cleanEditUrl();
         };
 
         toolbar.addEventListener("pointerdown", handleToolbarClick, true);
@@ -2037,12 +2094,27 @@
         });
       };
 
+      const setupEditEntry = () => {
+        const editLink = document.querySelector(".footer-edit-link");
+        if (!editLink) {
+          return;
+        }
+        editLink.addEventListener("click", async (event) => {
+          event.preventDefault();
+          const hasAccess = await requestEditAccess();
+          if (hasAccess) {
+            window.location.href = editLink.href;
+          }
+        });
+      };
+
       document.querySelectorAll("[data-lang]").forEach((button) => {
         button.addEventListener("click", () => applyLanguage(button.dataset.lang));
       });
 
       applyLanguage("zh");
       setupContactForm();
+      setupEditEntry();
       createInlineEditor();
       loadRemoteContent();
       loadHomepageState();
