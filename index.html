@@ -1697,6 +1697,10 @@
         }
       };
 
+      const showSyncAlert = (message) => {
+        window.alert(message);
+      };
+
       const publishContentOverrides = async () => {
         let savedPin = "";
         try {
@@ -1708,23 +1712,49 @@
           savedPin ||
           window.prompt("请输入编辑发布密码。配置 Cloudflare 环境变量 CONTENT_ADMIN_PIN 后可用。");
         if (!pin) {
-          return { ok: false, error: "missing-pin" };
+          return { ok: false, message: "未输入发布密码，修改只保存在当前浏览器。" };
         }
 
-        const response = await fetch("/api/content", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ pin, content: contentOverrides })
-        });
-        if (!response.ok) {
-          return { ok: false, error: response.status };
+        let response;
+        let result = {};
+        try {
+          response = await fetch("/api/content", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ pin, content: contentOverrides })
+          });
+          result = await response.json().catch(() => ({}));
+        } catch (error) {
+          return { ok: false, message: "网络请求失败，修改只保存在当前浏览器。" };
+        }
+
+        if (!response.ok || !result.ok) {
+          if (response.status === 401) {
+            try {
+              localStorage.removeItem(contentPinStorageKey);
+            } catch (error) {
+              window.name = "";
+            }
+            return { ok: false, message: "发布密码不正确，线上同步失败。" };
+          }
+          if (response.status === 501) {
+            return {
+              ok: false,
+              message:
+                "线上同步未成功：Cloudflare 还没有配置 KV 绑定 PORTFOLIO_CONTENT 或环境变量 CONTENT_ADMIN_PIN。"
+            };
+          }
+          return {
+            ok: false,
+            message: result.error || `线上同步失败，状态码 ${response.status}。`
+          };
         }
         try {
           localStorage.setItem(contentPinStorageKey, pin);
         } catch (error) {
           window.name = `${windowStoragePrefix}${JSON.stringify(contentOverrides)}`;
         }
-        return { ok: true };
+        return { ok: true, message: "已同步到线上，其他浏览器刷新后也会看到。" };
       };
 
       const applyLanguage = (lang) => {
@@ -1835,9 +1865,11 @@
             publishContentOverrides().then((result) => {
               if (result.ok) {
                 remoteContentReady = true;
-                updateNote("已同步到线上，其他浏览器刷新后也会看到。");
+                updateNote(result.message);
+                showSyncAlert(result.message);
               } else {
-                updateNote("已保存到本浏览器；线上同步需要先配置 Cloudflare KV 和发布密码。");
+                updateNote(result.message);
+                showSyncAlert(result.message);
               }
             });
           }
