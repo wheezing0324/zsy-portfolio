@@ -1721,16 +1721,32 @@
           editableNodes.forEach((node) => {
             node.setAttribute("contenteditable", "true");
             node.setAttribute("spellcheck", currentLang === "en" ? "true" : "false");
-            node.addEventListener("click", (event) => {
-              if (node.tagName === "A") {
-                event.preventDefault();
-              }
-            });
-            node.addEventListener("input", () => {
-              pendingEdits[node.dataset.i18n] = node.textContent.trim();
-              updateNote("有未保存修改，点击“保存修改”后生效。");
-            });
+            if (!node.dataset.inlineEditReady) {
+              node.dataset.inlineEditReady = "true";
+              node.addEventListener("click", (event) => {
+                if (node.tagName === "A" && document.body.classList.contains("inline-editing")) {
+                  event.preventDefault();
+                }
+              });
+              node.addEventListener("input", () => {
+                pendingEdits[node.dataset.i18n] = node.textContent.trim();
+                updateNote("有未保存修改，点击“保存修改”后生效。");
+              });
+            }
           });
+        };
+
+        const disableEditableNodes = () => {
+          editableNodes.forEach((node) => {
+            node.removeAttribute("contenteditable");
+            node.removeAttribute("spellcheck");
+          });
+        };
+
+        const handleToolbarAction = (action) => (event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          action();
         };
 
         const collectInlineText = () => {
@@ -1753,10 +1769,7 @@
 
         const exitInlineEditor = () => {
           collectInlineText();
-          editableNodes.forEach((node) => {
-            node.removeAttribute("contenteditable");
-            node.removeAttribute("spellcheck");
-          });
+          disableEditableNodes();
           document.body.classList.remove("inline-editing");
           toolbar.remove();
 
@@ -1768,19 +1781,28 @@
           }
         };
 
-        toolbar.querySelector("[data-edit-save]").addEventListener("click", () => {
-          collectInlineText();
-          updateNote("已保存到本浏览器，并立即更新当前页面。");
-        });
+        toolbar.querySelector("[data-edit-save]").addEventListener(
+          "click",
+          handleToolbarAction(() => {
+            collectInlineText();
+            updateNote("已保存到本浏览器，并立即更新当前页面。");
+          })
+        );
 
-        toolbar.querySelector("[data-edit-reset]").addEventListener("click", () => {
-          localStorage.removeItem(contentStorageKey);
-          window.location.reload();
-        });
+        toolbar.querySelector("[data-edit-reset]").addEventListener(
+          "click",
+          handleToolbarAction(() => {
+            localStorage.removeItem(contentStorageKey);
+            window.location.reload();
+          })
+        );
 
-        toolbar.querySelector("[data-edit-exit]").addEventListener("click", () => {
-          exitInlineEditor();
-        });
+        toolbar.querySelector("[data-edit-exit]").addEventListener(
+          "click",
+          handleToolbarAction(() => {
+            exitInlineEditor();
+          })
+        );
 
         document.querySelectorAll("[data-lang]").forEach((button) => {
           button.addEventListener("click", () => {
