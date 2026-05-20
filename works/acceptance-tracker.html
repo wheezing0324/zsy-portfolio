@@ -340,10 +340,32 @@
 
       let acceptanceState = fallbackAcceptance;
       let currentFilter = "all";
+      const checklistStorageKey = "zsy-acceptance-checks";
       const apiStatus = document.getElementById("api-status");
 
       const setApiStatus = (message) => {
         apiStatus.textContent = message;
+      };
+
+      const saveLocalChecks = () => {
+        localStorage.setItem(checklistStorageKey, JSON.stringify(acceptanceState.checks));
+      };
+
+      const applyLocalChecks = (data) => {
+        try {
+          const checks = JSON.parse(localStorage.getItem(checklistStorageKey) || "null");
+          if (Array.isArray(checks) && checks.length) {
+            data.checks = checks;
+            const done = data.checks.filter((entry) => entry.done).length;
+            data.summary.done = done;
+            data.summary.total = data.checks.length;
+            data.summary.openIssues =
+              data.feedback.length + data.checks.filter((entry) => !entry.done).length;
+          }
+        } catch {
+          localStorage.removeItem(checklistStorageKey);
+        }
+        return data;
       };
 
       const renderAcceptance = (data) => {
@@ -446,8 +468,12 @@
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload)
           });
+          if (!response.ok) {
+            throw new Error("Checklist update failed");
+          }
           const updated = await response.json();
           mergeChecklistUpdate(updated);
+          saveLocalChecks();
           setApiStatus("PATCH /api/acceptance/check 已更新验收项");
         } catch {
           const item = acceptanceState.checks.find((entry) => entry.id === payload.id);
@@ -457,6 +483,7 @@
           }
           recalculateLocalSummary();
           renderAcceptance(acceptanceState);
+          saveLocalChecks();
           setApiStatus("离线静态模式：验收项更新只保存在当前页面");
         }
       };
@@ -468,13 +495,18 @@
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ id })
           });
+          if (!response.ok) {
+            throw new Error("Checklist delete failed");
+          }
           const updated = await response.json();
           mergeChecklistUpdate(updated);
+          saveLocalChecks();
           setApiStatus("DELETE /api/acceptance/check 已删除验收项");
         } catch {
           acceptanceState.checks = acceptanceState.checks.filter((entry) => entry.id !== id);
           recalculateLocalSummary();
           renderAcceptance(acceptanceState);
+          saveLocalChecks();
           setApiStatus("离线静态模式：验收项删除只保存在当前页面");
         }
       };
@@ -497,8 +529,12 @@
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload)
           });
+          if (!response.ok) {
+            throw new Error("Checklist create failed");
+          }
           const updated = await response.json();
           mergeChecklistUpdate(updated);
+          saveLocalChecks();
           setApiStatus("POST /api/acceptance/check 已新增验收项");
           event.currentTarget.reset();
         } catch {
@@ -509,6 +545,7 @@
           });
           recalculateLocalSummary();
           renderAcceptance(acceptanceState);
+          saveLocalChecks();
           setApiStatus("离线静态模式：新增验收项只保存在当前页面");
         }
       });
@@ -538,7 +575,7 @@
       fetch("/api/acceptance")
         .then((response) => response.json())
         .then((data) => {
-          acceptanceState = data;
+          acceptanceState = applyLocalChecks(data);
           renderAcceptance(acceptanceState);
           setApiStatus("GET /api/acceptance 已从后端加载验收数据");
         })
