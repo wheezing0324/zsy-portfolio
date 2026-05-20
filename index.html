@@ -711,40 +711,27 @@
         font-size: 0.92rem;
       }
 
-      .content-editor {
+      .edit-toolbar {
         position: fixed;
-        right: 18px;
+        left: 50%;
         bottom: 18px;
         z-index: 60;
-        width: min(420px, calc(100vw - 24px));
-        max-height: min(760px, calc(100vh - 24px));
-        overflow: hidden;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        align-items: center;
+        width: min(620px, calc(100vw - 24px));
+        transform: translateX(-50%);
+        padding: 10px 12px;
         border: 1px solid var(--line);
         border-radius: 8px;
         background: rgba(255, 255, 255, 0.96);
         box-shadow: var(--shadow);
       }
 
-      .content-editor[hidden] {
-        display: none;
-      }
-
-      .editor-head {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 12px;
-        padding: 14px 16px;
-        border-bottom: 1px solid var(--line);
-      }
-
-      .editor-head strong {
-        color: var(--accent-dark);
-      }
-
-      .editor-head button,
-      .editor-actions button {
-        min-height: 34px;
+      .edit-toolbar button {
+        min-height: 36px;
+        padding: 0 12px;
         border: 1px solid var(--line);
         border-radius: 999px;
         background: var(--surface);
@@ -755,64 +742,31 @@
         font-weight: 760;
       }
 
-      .editor-head button {
-        width: 34px;
-        padding: 0;
-      }
-
-      .editor-body {
-        display: grid;
-        gap: 12px;
-        max-height: calc(min(760px, 100vh - 24px) - 62px);
-        overflow: auto;
-        padding: 14px 16px 16px;
-      }
-
-      .editor-help {
+      .edit-toolbar p {
+        flex: 1 1 220px;
         margin: 0;
         color: var(--muted);
-        font-size: 0.86rem;
+        font-size: 0.84rem;
       }
 
-      .editor-field {
-        display: grid;
-        gap: 6px;
+      body.inline-editing {
+        padding-bottom: 76px;
       }
 
-      .editor-field label {
-        color: var(--accent-dark);
-        font-size: 0.78rem;
-        font-weight: 800;
+      body.inline-editing [data-i18n] {
+        outline: 1px dashed rgba(23, 107, 91, 0.28);
+        outline-offset: 3px;
+        border-radius: 4px;
+        cursor: text;
       }
 
-      .editor-field textarea {
-        width: 100%;
-        min-height: 72px;
-        resize: vertical;
-        border: 1px solid var(--line);
-        border-radius: 8px;
-        padding: 10px;
-        color: var(--ink);
-        font: inherit;
-        font-size: 0.9rem;
+      body.inline-editing [data-i18n]:focus {
+        outline: 2px solid var(--accent);
+        background: rgba(220, 235, 230, 0.55);
       }
 
-      .editor-actions {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        align-items: center;
-      }
-
-      .editor-actions button {
-        padding: 0 12px;
-      }
-
-      .editor-note {
-        min-height: 18px;
-        margin: 0;
-        color: var(--muted);
-        font-size: 0.82rem;
+      body.inline-editing a[data-i18n] {
+        cursor: text;
       }
 
       @media (max-width: 900px) {
@@ -1703,116 +1657,99 @@
         renderHomepageState();
       };
 
-      const createContentEditor = () => {
+      const createInlineEditor = () => {
         const params = new URLSearchParams(window.location.search);
         if (params.get("edit") !== "1") {
           return;
         }
 
-        const editableKeys = Array.from(
-          new Set([
-            ...Array.from(document.querySelectorAll("[data-i18n]")).map(
-              (node) => node.dataset.i18n
-            ),
-            ...Array.from(document.querySelectorAll("[data-i18n-placeholder]")).map(
-              (node) => node.dataset.i18nPlaceholder
-            ),
-            "pageTitle",
-            "pageDescription"
-          ])
-        ).filter((key) => typeof copy[currentLang][key] === "string");
-
-        const editor = document.createElement("aside");
-        editor.className = "content-editor";
-        editor.setAttribute("aria-label", "Homepage content editor");
-        editor.innerHTML = `
-          <div class="editor-head">
-            <strong>文案编辑</strong>
-            <button type="button" data-editor-close aria-label="关闭">×</button>
-          </div>
-          <div class="editor-body">
-            <p class="editor-help">当前编辑：<strong data-editor-lang></strong>。保存后会立即更新本浏览器预览；导出 JSON 可用于固化发布。</p>
-            <div class="editor-actions">
-              <button type="button" data-editor-save>保存预览</button>
-              <button type="button" data-editor-export>导出 JSON</button>
-              <button type="button" data-editor-reset>清空本地修改</button>
-            </div>
-            <p class="editor-note" data-editor-note></p>
-            <div data-editor-fields></div>
-          </div>
+        document.body.classList.add("inline-editing");
+        const toolbar = document.createElement("div");
+        toolbar.className = "edit-toolbar";
+        toolbar.setAttribute("role", "status");
+        toolbar.innerHTML = `
+          <p data-edit-note>编辑模式：直接点击页面文字修改，当前为中文。</p>
+          <button type="button" data-edit-save>保存修改</button>
+          <button type="button" data-edit-reset>清空修改</button>
+          <button type="button" data-edit-exit>退出编辑</button>
         `;
-        document.body.appendChild(editor);
+        document.body.appendChild(toolbar);
 
-        const fieldsRoot = editor.querySelector("[data-editor-fields]");
-        const langLabel = editor.querySelector("[data-editor-lang]");
-        const note = editor.querySelector("[data-editor-note]");
+        const note = toolbar.querySelector("[data-edit-note]");
+        const editableNodes = Array.from(document.querySelectorAll("[data-i18n]")).filter(
+          (node) => !node.closest(".lang-toggle")
+        );
+        let pendingEdits = {};
 
-        const shortValue = (value) => (String(value || "").length > 56 ? 120 : 72);
-
-        const renderFields = () => {
-          if (langLabel) {
-            langLabel.textContent = currentLang === "zh" ? "中文" : "English";
+        const updateNote = (message) => {
+          if (note) {
+            note.textContent =
+              message || `编辑模式：直接点击页面文字修改，当前为${currentLang === "zh" ? "中文" : "English"}。`;
           }
-          fieldsRoot.innerHTML = editableKeys
-            .map((key) => {
-              const value = copy[currentLang][key] || "";
-              return `
-                <div class="editor-field">
-                  <label for="editor-${key}">${key}</label>
-                  <textarea id="editor-${key}" data-editor-key="${key}" style="min-height:${shortValue(value)}px">${value
-                    .replace(/&/g, "&amp;")
-                    .replace(/</g, "&lt;")
-                    .replace(/>/g, "&gt;")}</textarea>
-                </div>
-              `;
-            })
-            .join("");
         };
 
-        const collectFields = () => {
-          contentOverrides[currentLang] = contentOverrides[currentLang] || {};
-          editor.querySelectorAll("[data-editor-key]").forEach((field) => {
-            contentOverrides[currentLang][field.dataset.editorKey] = field.value.trim();
+        const enableEditableNodes = () => {
+          editableNodes.forEach((node) => {
+            if (node.closest(".edit-toolbar")) {
+              return;
+            }
+            node.setAttribute("contenteditable", "true");
+            node.setAttribute("spellcheck", currentLang === "en" ? "true" : "false");
+            node.addEventListener("click", (event) => {
+              if (node.tagName === "A") {
+                event.preventDefault();
+              }
+            });
+            node.addEventListener("input", () => {
+              pendingEdits[node.dataset.i18n] = node.textContent.trim();
+              updateNote("有未保存修改，点击“保存修改”后生效。");
+            });
           });
+        };
+
+        const collectInlineText = () => {
+          const activeElement = document.activeElement;
+          if (activeElement?.dataset?.i18n) {
+            pendingEdits[activeElement.dataset.i18n] = activeElement.textContent.trim();
+          }
+          contentOverrides[currentLang] = contentOverrides[currentLang] || {};
+          Object.entries(pendingEdits).forEach(([key, value]) => {
+            if (typeof copy[currentLang][key] === "string") {
+              contentOverrides[currentLang][key] = value;
+            }
+          });
+          pendingEdits = {};
           saveContentOverrides();
           applyContentOverrides();
           applyLanguage(currentLang);
-          renderFields();
+          enableEditableNodes();
         };
 
-        editor.querySelector("[data-editor-save]").addEventListener("click", () => {
-          collectFields();
-          note.textContent = "已保存到本浏览器，并更新当前页面预览。";
+        toolbar.querySelector("[data-edit-save]").addEventListener("click", () => {
+          collectInlineText();
+          updateNote("已保存到本浏览器，并立即更新当前页面。");
         });
 
-        editor.querySelector("[data-editor-export]").addEventListener("click", () => {
-          collectFields();
-          const blob = new Blob([JSON.stringify(contentOverrides, null, 2)], {
-            type: "application/json"
-          });
-          const url = URL.createObjectURL(blob);
-          const link = document.createElement("a");
-          link.href = url;
-          link.download = "homepage-copy-overrides.json";
-          link.click();
-          URL.revokeObjectURL(url);
-          note.textContent = "已导出 JSON，可用于发布前固化文案。";
-        });
-
-        editor.querySelector("[data-editor-reset]").addEventListener("click", () => {
+        toolbar.querySelector("[data-edit-reset]").addEventListener("click", () => {
           localStorage.removeItem(contentStorageKey);
           window.location.reload();
         });
 
-        editor.querySelector("[data-editor-close]").addEventListener("click", () => {
-          editor.hidden = true;
+        toolbar.querySelector("[data-edit-exit]").addEventListener("click", () => {
+          window.location.href = window.location.pathname + window.location.hash;
         });
 
         document.querySelectorAll("[data-lang]").forEach((button) => {
-          button.addEventListener("click", renderFields);
+          button.addEventListener("click", () => {
+            window.setTimeout(() => {
+              enableEditableNodes();
+              updateNote();
+            }, 0);
+          });
         });
 
-        renderFields();
+        enableEditableNodes();
+        updateNote();
       };
 
       const renderHomepageState = () => {
@@ -1920,7 +1857,7 @@
 
       applyLanguage("zh");
       setupContactForm();
-      createContentEditor();
+      createInlineEditor();
       loadHomepageState();
     </script>
   </body>
