@@ -711,6 +711,110 @@
         font-size: 0.92rem;
       }
 
+      .content-editor {
+        position: fixed;
+        right: 18px;
+        bottom: 18px;
+        z-index: 60;
+        width: min(420px, calc(100vw - 24px));
+        max-height: min(760px, calc(100vh - 24px));
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.96);
+        box-shadow: var(--shadow);
+      }
+
+      .content-editor[hidden] {
+        display: none;
+      }
+
+      .editor-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 14px 16px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .editor-head strong {
+        color: var(--accent-dark);
+      }
+
+      .editor-head button,
+      .editor-actions button {
+        min-height: 34px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        background: var(--surface);
+        color: var(--ink);
+        cursor: pointer;
+        font: inherit;
+        font-size: 0.86rem;
+        font-weight: 760;
+      }
+
+      .editor-head button {
+        width: 34px;
+        padding: 0;
+      }
+
+      .editor-body {
+        display: grid;
+        gap: 12px;
+        max-height: calc(min(760px, 100vh - 24px) - 62px);
+        overflow: auto;
+        padding: 14px 16px 16px;
+      }
+
+      .editor-help {
+        margin: 0;
+        color: var(--muted);
+        font-size: 0.86rem;
+      }
+
+      .editor-field {
+        display: grid;
+        gap: 6px;
+      }
+
+      .editor-field label {
+        color: var(--accent-dark);
+        font-size: 0.78rem;
+        font-weight: 800;
+      }
+
+      .editor-field textarea {
+        width: 100%;
+        min-height: 72px;
+        resize: vertical;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 10px;
+        color: var(--ink);
+        font: inherit;
+        font-size: 0.9rem;
+      }
+
+      .editor-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        align-items: center;
+      }
+
+      .editor-actions button {
+        padding: 0 12px;
+      }
+
+      .editor-note {
+        min-height: 18px;
+        margin: 0;
+        color: var(--muted);
+        font-size: 0.82rem;
+      }
+
       @media (max-width: 900px) {
         .nav {
           min-height: auto;
@@ -1541,6 +1645,33 @@
 
       let currentLang = "zh";
       let homepageState = null;
+      const contentStorageKey = "zsy-portfolio-copy-overrides";
+      let contentOverrides = {};
+
+      const readContentOverrides = () => {
+        try {
+          const saved = JSON.parse(localStorage.getItem(contentStorageKey) || "{}");
+          return saved && typeof saved === "object" ? saved : {};
+        } catch (error) {
+          return {};
+        }
+      };
+
+      const saveContentOverrides = () => {
+        localStorage.setItem(contentStorageKey, JSON.stringify(contentOverrides));
+      };
+
+      const applyContentOverrides = () => {
+        ["zh", "en"].forEach((lang) => {
+          copy[lang] = {
+            ...copy[lang],
+            ...(contentOverrides[lang] || {})
+          };
+        });
+      };
+
+      contentOverrides = readContentOverrides();
+      applyContentOverrides();
 
       const applyLanguage = (lang) => {
         currentLang = lang;
@@ -1572,6 +1703,118 @@
         renderHomepageState();
       };
 
+      const createContentEditor = () => {
+        const params = new URLSearchParams(window.location.search);
+        if (params.get("edit") !== "1") {
+          return;
+        }
+
+        const editableKeys = Array.from(
+          new Set([
+            ...Array.from(document.querySelectorAll("[data-i18n]")).map(
+              (node) => node.dataset.i18n
+            ),
+            ...Array.from(document.querySelectorAll("[data-i18n-placeholder]")).map(
+              (node) => node.dataset.i18nPlaceholder
+            ),
+            "pageTitle",
+            "pageDescription"
+          ])
+        ).filter((key) => typeof copy[currentLang][key] === "string");
+
+        const editor = document.createElement("aside");
+        editor.className = "content-editor";
+        editor.setAttribute("aria-label", "Homepage content editor");
+        editor.innerHTML = `
+          <div class="editor-head">
+            <strong>文案编辑</strong>
+            <button type="button" data-editor-close aria-label="关闭">×</button>
+          </div>
+          <div class="editor-body">
+            <p class="editor-help">当前编辑：<strong data-editor-lang></strong>。保存后会立即更新本浏览器预览；导出 JSON 可用于固化发布。</p>
+            <div class="editor-actions">
+              <button type="button" data-editor-save>保存预览</button>
+              <button type="button" data-editor-export>导出 JSON</button>
+              <button type="button" data-editor-reset>清空本地修改</button>
+            </div>
+            <p class="editor-note" data-editor-note></p>
+            <div data-editor-fields></div>
+          </div>
+        `;
+        document.body.appendChild(editor);
+
+        const fieldsRoot = editor.querySelector("[data-editor-fields]");
+        const langLabel = editor.querySelector("[data-editor-lang]");
+        const note = editor.querySelector("[data-editor-note]");
+
+        const shortValue = (value) => (String(value || "").length > 56 ? 120 : 72);
+
+        const renderFields = () => {
+          if (langLabel) {
+            langLabel.textContent = currentLang === "zh" ? "中文" : "English";
+          }
+          fieldsRoot.innerHTML = editableKeys
+            .map((key) => {
+              const value = copy[currentLang][key] || "";
+              return `
+                <div class="editor-field">
+                  <label for="editor-${key}">${key}</label>
+                  <textarea id="editor-${key}" data-editor-key="${key}" style="min-height:${shortValue(value)}px">${value
+                    .replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;")}</textarea>
+                </div>
+              `;
+            })
+            .join("");
+        };
+
+        const collectFields = () => {
+          contentOverrides[currentLang] = contentOverrides[currentLang] || {};
+          editor.querySelectorAll("[data-editor-key]").forEach((field) => {
+            contentOverrides[currentLang][field.dataset.editorKey] = field.value.trim();
+          });
+          saveContentOverrides();
+          applyContentOverrides();
+          applyLanguage(currentLang);
+          renderFields();
+        };
+
+        editor.querySelector("[data-editor-save]").addEventListener("click", () => {
+          collectFields();
+          note.textContent = "已保存到本浏览器，并更新当前页面预览。";
+        });
+
+        editor.querySelector("[data-editor-export]").addEventListener("click", () => {
+          collectFields();
+          const blob = new Blob([JSON.stringify(contentOverrides, null, 2)], {
+            type: "application/json"
+          });
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = "homepage-copy-overrides.json";
+          link.click();
+          URL.revokeObjectURL(url);
+          note.textContent = "已导出 JSON，可用于发布前固化文案。";
+        });
+
+        editor.querySelector("[data-editor-reset]").addEventListener("click", () => {
+          localStorage.removeItem(contentStorageKey);
+          window.location.reload();
+        });
+
+        editor.querySelector("[data-editor-close]").addEventListener("click", () => {
+          editor.hidden = true;
+        });
+
+        document.querySelectorAll("[data-lang]").forEach((button) => {
+          button.addEventListener("click", renderFields);
+        });
+
+        renderFields();
+      };
+
       const renderHomepageState = () => {
         if (!homepageState) {
           return;
@@ -1583,18 +1826,32 @@
           const statusBadge = document.querySelector("[data-i18n='statusBadge']");
           const contactLocation = document.querySelector("[data-i18n='contactLinkedin']");
           const heroEyebrow = document.querySelector("[data-i18n='heroEyebrow']");
-          if (statusText) statusText.textContent = localizedProfile.status;
-          if (statusBadge) statusBadge.textContent = localizedProfile.availability;
-          if (contactLocation) contactLocation.textContent = localizedProfile.contact;
-          if (heroEyebrow) heroEyebrow.textContent = localizedProfile.role;
+          if (statusText && !contentOverrides[currentLang]?.statusText) {
+            statusText.textContent = localizedProfile.status;
+          }
+          if (statusBadge && !contentOverrides[currentLang]?.statusBadge) {
+            statusBadge.textContent = localizedProfile.availability;
+          }
+          if (contactLocation && !contentOverrides[currentLang]?.contactLinkedin) {
+            contactLocation.textContent = localizedProfile.contact;
+          }
+          if (heroEyebrow && !contentOverrides[currentLang]?.heroEyebrow) {
+            heroEyebrow.textContent = localizedProfile.role;
+          }
         }
 
         const metricOne = document.querySelector("[data-i18n='metricOneValue']");
         const metricTwo = document.querySelector("[data-i18n='metricTwoValue']");
         const metricThree = document.querySelector("[data-i18n='metricThreeValue']");
-        if (metricOne) metricOne.textContent = `${homepageState.metrics.solutionProjects}+`;
-        if (metricTwo) metricTwo.textContent = String(homepageState.metrics.documents);
-        if (metricThree) metricThree.textContent = String(homepageState.metrics.works);
+        if (metricOne && !contentOverrides[currentLang]?.metricOneValue) {
+          metricOne.textContent = `${homepageState.metrics.solutionProjects}+`;
+        }
+        if (metricTwo && !contentOverrides[currentLang]?.metricTwoValue) {
+          metricTwo.textContent = String(homepageState.metrics.documents);
+        }
+        if (metricThree && !contentOverrides[currentLang]?.metricThreeValue) {
+          metricThree.textContent = String(homepageState.metrics.works);
+        }
 
         const backendStatus = document.getElementById("backend-status");
         if (backendStatus) {
@@ -1663,6 +1920,7 @@
 
       applyLanguage("zh");
       setupContactForm();
+      createContentEditor();
       loadHomepageState();
     </script>
   </body>
