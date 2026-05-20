@@ -1702,7 +1702,11 @@
 
         const note = toolbar.querySelector("[data-edit-note]");
         const editableNodes = Array.from(document.querySelectorAll("[data-i18n]")).filter(
-          (node) => !node.closest(".lang-toggle")
+          (node) =>
+            !node.closest(".lang-toggle") &&
+            !node.closest(".edit-toolbar") &&
+            node.tagName !== "OPTION" &&
+            !node.classList.contains("sr-only")
         );
         let pendingEdits = {};
 
@@ -1715,9 +1719,6 @@
 
         const enableEditableNodes = () => {
           editableNodes.forEach((node) => {
-            if (node.closest(".edit-toolbar")) {
-              return;
-            }
             node.setAttribute("contenteditable", "true");
             node.setAttribute("spellcheck", currentLang === "en" ? "true" : "false");
             node.addEventListener("click", (event) => {
@@ -1750,6 +1751,23 @@
           enableEditableNodes();
         };
 
+        const exitInlineEditor = () => {
+          collectInlineText();
+          editableNodes.forEach((node) => {
+            node.removeAttribute("contenteditable");
+            node.removeAttribute("spellcheck");
+          });
+          document.body.classList.remove("inline-editing");
+          toolbar.remove();
+
+          const cleanUrl = `${window.location.pathname}${window.location.hash || ""}`;
+          try {
+            window.history.replaceState({}, "", cleanUrl);
+          } catch (error) {
+            window.location.hash = window.location.hash;
+          }
+        };
+
         toolbar.querySelector("[data-edit-save]").addEventListener("click", () => {
           collectInlineText();
           updateNote("已保存到本浏览器，并立即更新当前页面。");
@@ -1761,7 +1779,7 @@
         });
 
         toolbar.querySelector("[data-edit-exit]").addEventListener("click", () => {
-          window.location.href = window.location.pathname + window.location.hash;
+          exitInlineEditor();
         });
 
         document.querySelectorAll("[data-lang]").forEach((button) => {
