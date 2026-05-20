@@ -1656,15 +1656,6 @@
         }
       };
 
-      const clearContentOverrides = () => {
-        try {
-          localStorage.removeItem(contentStorageKey);
-        } catch (error) {
-          window.name = "";
-        }
-        window.name = "";
-      };
-
       const applyContentOverrides = () => {
         ["zh", "en"].forEach((lang) => {
           copy[lang] = {
@@ -1720,7 +1711,7 @@
         toolbar.innerHTML = `
           <p data-edit-note>编辑模式：直接点击页面文字修改，当前为中文。</p>
           <button type="button" data-edit-action="save">保存修改</button>
-          <button type="button" data-edit-action="reset">清空修改</button>
+          <button type="button" data-edit-action="reset">清空本轮修改</button>
           <button type="button" data-edit-action="exit">退出编辑</button>
         `;
         document.body.appendChild(toolbar);
@@ -1784,8 +1775,10 @@
             updateNote("已保存到本浏览器，并立即更新当前页面。");
           }
           if (action === "reset") {
-            clearContentOverrides();
-            window.location.reload();
+            pendingEdits = {};
+            applyLanguage(currentLang);
+            enableEditableNodes();
+            updateNote("已清空本轮未保存修改，之前保存的内容仍然保留。");
           }
           if (action === "exit") {
             exitInlineEditor();
