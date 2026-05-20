@@ -374,7 +374,51 @@ const server = http.createServer(async (request, response) => {
         sendJson(response, 404, { error: "Checklist item not found" });
         return;
       }
-      item.done = Boolean(body.done);
+      if (typeof body.done !== "undefined") {
+        item.done = Boolean(body.done);
+      }
+      if (typeof body.text === "string") {
+        const text = body.text.trim().slice(0, 120);
+        if (!text) {
+          sendJson(response, 400, { error: "Checklist text cannot be empty" });
+          return;
+        }
+        item.text = text;
+      }
+      sendJson(response, 200, {
+        summary: getAcceptanceSummary(),
+        checks: acceptanceState.checks
+      });
+      return;
+    }
+
+    if (request.method === "POST" && url.pathname === "/api/acceptance/check") {
+      const body = await readBody(request);
+      const text = String(body.text || "").trim().slice(0, 120);
+      if (!text) {
+        sendJson(response, 400, { error: "Checklist text is required" });
+        return;
+      }
+      acceptanceState.checks.push({
+        id: `check-${Date.now()}`,
+        text,
+        done: Boolean(body.done)
+      });
+      sendJson(response, 201, {
+        summary: getAcceptanceSummary(),
+        checks: acceptanceState.checks
+      });
+      return;
+    }
+
+    if (request.method === "DELETE" && url.pathname === "/api/acceptance/check") {
+      const body = await readBody(request);
+      const index = acceptanceState.checks.findIndex((entry) => entry.id === body.id);
+      if (index === -1) {
+        sendJson(response, 404, { error: "Checklist item not found" });
+        return;
+      }
+      acceptanceState.checks.splice(index, 1);
       sendJson(response, 200, {
         summary: getAcceptanceSummary(),
         checks: acceptanceState.checks

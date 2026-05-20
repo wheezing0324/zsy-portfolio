@@ -106,7 +106,7 @@
         display: grid;
         gap: 10px;
       }
-      label, .feedback-item {
+      label, .feedback-item, .check-item {
         display: flex;
         gap: 10px;
         align-items: flex-start;
@@ -118,6 +118,21 @@
       input { margin-top: 5px; }
       .feedback-item {
         display: block;
+      }
+      .check-item {
+        align-items: center;
+      }
+      .check-item label {
+        flex: 1;
+        border: 0;
+        background: transparent;
+        padding: 0;
+      }
+      .check-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        justify-content: flex-end;
       }
       .feedback-item strong {
         display: block;
@@ -202,6 +217,11 @@
         background: var(--accent);
         color: #fff;
       }
+      button.danger {
+        border-color: rgba(178, 74, 59, 0.32);
+        background: #fff7f5;
+        color: #b24a3b;
+      }
       .decision {
         padding: 16px;
         border: 1px solid var(--line);
@@ -258,6 +278,11 @@
         <div class="panel">
           <h2>功能验收清单</h2>
           <div class="checklist"></div>
+          <form class="interaction-form" id="check-form">
+            <h2>新增验收项</h2>
+            <input name="text" value="权限不足时导出按钮应显示禁用态和解释文案。" aria-label="验收项内容" />
+            <button type="submit">新增到验收清单</button>
+          </form>
         </div>
         <div class="panel">
           <h2>反馈与迭代池</h2>
@@ -329,7 +354,13 @@
         document.querySelector(".checklist").innerHTML = data.checks
           .map(
             (item) =>
-              `<label><input type="checkbox" data-check-id="${item.id}" ${item.done ? "checked" : ""} /> ${item.text}</label>`
+              `<div class="check-item">
+                <label><input type="checkbox" data-check-id="${item.id}" ${item.done ? "checked" : ""} /> <span>${item.text}</span></label>
+                <div class="check-actions">
+                  <button class="secondary" type="button" data-edit-check="${item.id}">编辑</button>
+                  <button class="danger" type="button" data-delete-check="${item.id}">删除</button>
+                </div>
+              </div>`
           )
           .join("");
 
@@ -366,32 +397,86 @@
         document.querySelectorAll("[data-check-id]").forEach((input) => {
           input.addEventListener("change", async () => {
             const payload = { id: input.dataset.checkId, done: input.checked };
-            try {
-              const response = await fetch("/api/acceptance/check", {
-                method: "PATCH",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(payload)
-              });
-              const updated = await response.json();
-              acceptanceState = {
-                ...acceptanceState,
-                summary: updated.summary,
-                checks: updated.checks
-              };
-              setApiStatus(`PATCH /api/acceptance/check 已写入：${input.checked ? "完成" : "未完成"}`);
-              renderAcceptance(acceptanceState);
-            } catch {
-              const item = acceptanceState.checks.find((entry) => entry.id === payload.id);
-              if (item) item.done = payload.done;
-              const done = acceptanceState.checks.filter((entry) => entry.done).length;
-              acceptanceState.summary.done = done;
-              acceptanceState.summary.openIssues =
-                acceptanceState.feedback.length + acceptanceState.checks.filter((entry) => !entry.done).length;
-              renderAcceptance(acceptanceState);
-              setApiStatus("离线静态模式：验收状态只保存在当前页面");
-            }
+            await updateChecklistItem(payload);
+            setApiStatus(`PATCH /api/acceptance/check 已写入：${input.checked ? "完成" : "未完成"}`);
           });
         });
+
+        document.querySelectorAll("[data-edit-check]").forEach((button) => {
+          button.addEventListener("click", async () => {
+            const item = acceptanceState.checks.find((entry) => entry.id === button.dataset.editCheck);
+            if (!item) return;
+            const nextText = window.prompt("编辑验收项", item.text);
+            if (nextText === null) return;
+            await updateChecklistItem({ id: item.id, text: nextText });
+          });
+        });
+
+        document.querySelectorAll("[data-delete-check]").forEach((button) => {
+          button.addEventListener("click", async () => {
+            const item = acceptanceState.checks.find((entry) => entry.id === button.dataset.deleteCheck);
+            if (!item) return;
+            if (!window.confirm(`删除验收项：${item.text}`)) return;
+            await deleteChecklistItem(item.id);
+          });
+        });
+      };
+
+      const recalculateLocalSummary = () => {
+        const done = acceptanceState.checks.filter((entry) => entry.done).length;
+        acceptanceState.summary.done = done;
+        acceptanceState.summary.total = acceptanceState.checks.length;
+        acceptanceState.summary.openIssues =
+          acceptanceState.feedback.length + acceptanceState.checks.filter((entry) => !entry.done).length;
+      };
+
+      const mergeChecklistUpdate = (updated) => {
+        acceptanceState = {
+          ...acceptanceState,
+          summary: updated.summary,
+          checks: updated.checks
+        };
+        renderAcceptance(acceptanceState);
+      };
+
+      const updateChecklistItem = async (payload) => {
+        try {
+          const response = await fetch("/api/acceptance/check", {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+          });
+          const updated = await response.json();
+          mergeChecklistUpdate(updated);
+          setApiStatus("PATCH /api/acceptance/check 已更新验收项");
+        } catch {
+          const item = acceptanceState.checks.find((entry) => entry.id === payload.id);
+          if (item) {
+            if (typeof payload.done !== "undefined") item.done = payload.done;
+            if (payload.text) item.text = payload.text;
+          }
+          recalculateLocalSummary();
+          renderAcceptance(acceptanceState);
+          setApiStatus("离线静态模式：验收项更新只保存在当前页面");
+        }
+      };
+
+      const deleteChecklistItem = async (id) => {
+        try {
+          const response = await fetch("/api/acceptance/check", {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ id })
+          });
+          const updated = await response.json();
+          mergeChecklistUpdate(updated);
+          setApiStatus("DELETE /api/acceptance/check 已删除验收项");
+        } catch {
+          acceptanceState.checks = acceptanceState.checks.filter((entry) => entry.id !== id);
+          recalculateLocalSummary();
+          renderAcceptance(acceptanceState);
+          setApiStatus("离线静态模式：验收项删除只保存在当前页面");
+        }
       };
 
       document.querySelectorAll("[data-filter]").forEach((button) => {
@@ -401,6 +486,31 @@
           currentFilter = button.dataset.filter;
           renderAcceptance(acceptanceState);
         });
+      });
+
+      document.getElementById("check-form").addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const payload = Object.fromEntries(new FormData(event.currentTarget).entries());
+        try {
+          const response = await fetch("/api/acceptance/check", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+          });
+          const updated = await response.json();
+          mergeChecklistUpdate(updated);
+          setApiStatus("POST /api/acceptance/check 已新增验收项");
+          event.currentTarget.reset();
+        } catch {
+          acceptanceState.checks.push({
+            id: `local-${Date.now()}`,
+            text: payload.text,
+            done: false
+          });
+          recalculateLocalSummary();
+          renderAcceptance(acceptanceState);
+          setApiStatus("离线静态模式：新增验收项只保存在当前页面");
+        }
       });
 
       document.getElementById("feedback-form").addEventListener("submit", async (event) => {
