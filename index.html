@@ -703,12 +703,34 @@
       }
 
       .site-footer {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        align-items: center;
+        justify-content: space-between;
         width: min(100% - 32px, var(--max));
         margin: 0 auto;
         padding: 28px 0 42px;
         border-top: 1px solid var(--line);
         color: var(--muted);
         font-size: 0.92rem;
+      }
+
+      .footer-edit-link {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 36px;
+        padding: 0 12px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        background: var(--surface);
+        color: var(--accent-dark);
+        font-weight: 760;
+      }
+
+      .footer-edit-link:hover {
+        border-color: var(--accent);
       }
 
       .edit-toolbar {
@@ -1241,6 +1263,7 @@
 
     <footer class="site-footer">
       <span data-i18n="footer">© 2026 郑舒予. AI 产品经理求职主页。</span>
+      <a class="footer-edit-link" href="?edit=1" data-i18n="footerEdit">进入编辑模式</a>
     </footer>
 
     <script>
@@ -1416,7 +1439,8 @@
           contactSubmitting: "正在提交到本地后端...",
           contactSuccess: "已写入本地后端：第 {contacts} 条意向。",
           contactError: "提交失败，请确认正在通过本地服务访问页面。",
-          footer: "© 2026 郑舒予. AI 产品经理求职主页。"
+          footer: "© 2026 郑舒予. AI 产品经理求职主页。",
+          footerEdit: "进入编辑模式"
         },
         en: {
           pageTitle: "Shuyu Zheng | B2B Product Manager Intern",
@@ -1593,7 +1617,8 @@
           contactSubmitting: "Submitting to local backend...",
           contactSuccess: "Saved in local backend: lead #{contacts}.",
           contactError: "Submit failed. Please open the page through the local server.",
-          footer: "© 2026 Shuyu Zheng. AI Product Manager portfolio."
+          footer: "© 2026 Shuyu Zheng. AI Product Manager portfolio.",
+          footerEdit: "Edit Page"
         }
       };
 
