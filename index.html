@@ -749,6 +749,8 @@
         border-radius: 8px;
         background: rgba(255, 255, 255, 0.96);
         box-shadow: var(--shadow);
+        pointer-events: auto;
+        user-select: none;
       }
 
       .edit-toolbar button {
@@ -1625,6 +1627,7 @@
       let currentLang = "zh";
       let homepageState = null;
       const contentStorageKey = "zsy-portfolio-copy-overrides";
+      const windowStoragePrefix = "zsyPortfolioCopyOverrides:";
       let contentOverrides = {};
 
       const readContentOverrides = () => {
@@ -1632,12 +1635,34 @@
           const saved = JSON.parse(localStorage.getItem(contentStorageKey) || "{}");
           return saved && typeof saved === "object" ? saved : {};
         } catch (error) {
-          return {};
+          try {
+            if (window.name.startsWith(windowStoragePrefix)) {
+              const saved = JSON.parse(window.name.slice(windowStoragePrefix.length) || "{}");
+              return saved && typeof saved === "object" ? saved : {};
+            }
+          } catch (fallbackError) {
+            return {};
+          }
         }
+        return {};
       };
 
       const saveContentOverrides = () => {
-        localStorage.setItem(contentStorageKey, JSON.stringify(contentOverrides));
+        const serialized = JSON.stringify(contentOverrides);
+        try {
+          localStorage.setItem(contentStorageKey, serialized);
+        } catch (error) {
+          window.name = `${windowStoragePrefix}${serialized}`;
+        }
+      };
+
+      const clearContentOverrides = () => {
+        try {
+          localStorage.removeItem(contentStorageKey);
+        } catch (error) {
+          window.name = "";
+        }
+        window.name = "";
       };
 
       const applyContentOverrides = () => {
@@ -1694,9 +1719,9 @@
         toolbar.setAttribute("role", "status");
         toolbar.innerHTML = `
           <p data-edit-note>编辑模式：直接点击页面文字修改，当前为中文。</p>
-          <button type="button" data-edit-save>保存修改</button>
-          <button type="button" data-edit-reset>清空修改</button>
-          <button type="button" data-edit-exit>退出编辑</button>
+          <button type="button" data-edit-action="save">保存修改</button>
+          <button type="button" data-edit-action="reset">清空修改</button>
+          <button type="button" data-edit-action="exit">退出编辑</button>
         `;
         document.body.appendChild(toolbar);
 
@@ -1743,10 +1768,28 @@
           });
         };
 
-        const handleToolbarAction = (action) => (event) => {
+        const handleToolbarClick = (event) => {
+          const button = event.target.closest("[data-edit-action]");
+          if (!button || !toolbar.contains(button)) {
+            return;
+          }
           event.preventDefault();
           event.stopPropagation();
-          action();
+          if (typeof event.stopImmediatePropagation === "function") {
+            event.stopImmediatePropagation();
+          }
+          const action = button.dataset.editAction;
+          if (action === "save") {
+            collectInlineText();
+            updateNote("已保存到本浏览器，并立即更新当前页面。");
+          }
+          if (action === "reset") {
+            clearContentOverrides();
+            window.location.reload();
+          }
+          if (action === "exit") {
+            exitInlineEditor();
+          }
         };
 
         const collectInlineText = () => {
@@ -1771,6 +1814,10 @@
           collectInlineText();
           disableEditableNodes();
           document.body.classList.remove("inline-editing");
+          toolbar.removeEventListener("pointerdown", handleToolbarClick, true);
+          toolbar.removeEventListener("click", handleToolbarClick, true);
+          document.removeEventListener("pointerdown", handleToolbarClick, true);
+          document.removeEventListener("click", handleToolbarClick, true);
           toolbar.remove();
 
           const cleanUrl = `${window.location.pathname}${window.location.hash || ""}`;
@@ -1781,28 +1828,10 @@
           }
         };
 
-        toolbar.querySelector("[data-edit-save]").addEventListener(
-          "click",
-          handleToolbarAction(() => {
-            collectInlineText();
-            updateNote("已保存到本浏览器，并立即更新当前页面。");
-          })
-        );
-
-        toolbar.querySelector("[data-edit-reset]").addEventListener(
-          "click",
-          handleToolbarAction(() => {
-            localStorage.removeItem(contentStorageKey);
-            window.location.reload();
-          })
-        );
-
-        toolbar.querySelector("[data-edit-exit]").addEventListener(
-          "click",
-          handleToolbarAction(() => {
-            exitInlineEditor();
-          })
-        );
+        toolbar.addEventListener("pointerdown", handleToolbarClick, true);
+        toolbar.addEventListener("click", handleToolbarClick, true);
+        document.addEventListener("pointerdown", handleToolbarClick, true);
+        document.addEventListener("click", handleToolbarClick, true);
 
         document.querySelectorAll("[data-lang]").forEach((button) => {
           button.addEventListener("click", () => {
