@@ -78,6 +78,37 @@
         padding: 22px;
       }
       h2, h3 { margin: 0 0 12px; }
+      .summary-grid,
+      .output-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 14px;
+        margin: 18px 0;
+      }
+      .summary-card,
+      .output-card {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+        padding: 16px;
+      }
+      .summary-card span,
+      .output-card span {
+        display: block;
+        color: var(--muted);
+        font-size: 0.84rem;
+      }
+      .summary-card strong {
+        display: block;
+        margin-top: 6px;
+        color: var(--accent);
+        font-size: 1.8rem;
+        line-height: 1;
+      }
+      .output-card strong {
+        display: block;
+        margin: 4px 0 8px;
+      }
       .item {
         padding: 14px;
         border: 1px solid var(--line);
@@ -120,6 +151,7 @@
         border-top: 1px solid var(--line);
       }
       .interaction-form input,
+      .interaction-form select,
       .interaction-form textarea {
         width: 100%;
         border: 1px solid var(--line);
@@ -128,8 +160,14 @@
         color: var(--ink);
         font: inherit;
       }
-      .interaction-form input { min-height: 40px; padding: 0 12px; }
+      .interaction-form input,
+      .interaction-form select { min-height: 40px; padding: 0 12px; }
       .interaction-form textarea { min-height: 86px; padding: 10px 12px; resize: vertical; }
+      .score-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 8px;
+      }
       .tabs {
         display: flex;
         flex-wrap: wrap;
@@ -173,7 +211,7 @@
       }
       input { margin-top: 5px; }
       @media (max-width: 820px) {
-        .grid { grid-template-columns: 1fr; }
+        .grid, .summary-grid, .output-grid, .score-grid { grid-template-columns: 1fr; }
         .topbar { align-items: flex-start; flex-direction: column; }
       }
     </style>
@@ -193,6 +231,12 @@
       </p>
       <div class="api-status" id="api-status">正在连接后端 API...</div>
 
+      <section class="summary-grid" aria-label="requirement summary">
+        <div class="summary-card"><span>反馈数量</span><strong data-summary="feedback">3</strong></div>
+        <div class="summary-card"><span>P0 需求</span><strong data-summary="p0">2</strong></div>
+        <div class="summary-card"><span>PRD 完整度</span><strong data-summary="readiness">83%</strong></div>
+      </section>
+
       <section class="grid">
         <div class="panel">
           <h2>客户反馈池</h2>
@@ -201,7 +245,25 @@
           <form class="interaction-form" id="feedback-form">
             <h3>新增客户反馈</h3>
             <input name="role" value="招聘方 / 面试官" aria-label="反馈角色" />
+            <input name="scenario" value="续费前客户风险识别" aria-label="业务场景" />
             <textarea name="text" required aria-label="反馈内容">希望看到候选人能把模糊需求快速拆成 PRD、验收标准和后续迭代计划。</textarea>
+            <div class="score-grid">
+              <select name="value" aria-label="业务价值">
+                <option value="5">业务价值 5</option>
+                <option value="4">业务价值 4</option>
+                <option value="3">业务价值 3</option>
+              </select>
+              <select name="urgency" aria-label="紧急程度">
+                <option value="5">紧急程度 5</option>
+                <option value="4">紧急程度 4</option>
+                <option value="3">紧急程度 3</option>
+              </select>
+              <select name="complexity" aria-label="实现复杂度">
+                <option value="2">复杂度 2</option>
+                <option value="3">复杂度 3</option>
+                <option value="4">复杂度 4</option>
+              </select>
+            </div>
             <button type="submit">提交到后端并刷新 PRD</button>
           </form>
         </div>
@@ -216,6 +278,24 @@
           <div class="prd active" data-panel="scope"></div>
           <div class="prd" data-panel="flow"></div>
           <div class="prd" data-panel="acceptance"></div>
+        </div>
+      </section>
+
+      <section class="output-grid" aria-label="prd outputs">
+        <div class="output-card">
+          <span>用户故事</span>
+          <strong id="user-story-title">作为客户成功，我希望快速识别风险客户</strong>
+          <p id="user-story-body">以便在续费前准备沟通材料并推动客户回访。</p>
+        </div>
+        <div class="output-card">
+          <span>版本计划</span>
+          <strong id="release-plan-title">本轮版本：客户活跃度 + 标准导出</strong>
+          <p id="release-plan-body">P0 进入本轮，P1 异常提醒进入下一版，复杂自定义指标暂缓。</p>
+        </div>
+        <div class="output-card">
+          <span>风险提示</span>
+          <strong id="risk-note-title">待确认：导出字段口径</strong>
+          <p id="risk-note-body">需要产品、测试和研发提前对齐字段枚举，避免验收阶段返工。</p>
         </div>
       </section>
     </main>
@@ -259,8 +339,23 @@
       };
 
       const renderPrd = (data) => {
+        const p0Count = data.sections.acceptance.items.filter((item) => item.done).length;
+        document.querySelector('[data-summary="feedback"]').textContent = data.feedback.length;
+        document.querySelector('[data-summary="p0"]').textContent = Math.max(1, p0Count);
+        document.querySelector('[data-summary="readiness"]').textContent = `${Math.min(96, 68 + data.feedback.length * 5 + p0Count * 4)}%`;
+
+        const latest = data.feedback[0];
+        if (latest) {
+          document.getElementById("user-story-title").textContent = `作为${latest.role}，我希望${latest.text.slice(0, 18)}...`;
+          document.getElementById("user-story-body").textContent = "以便产品、研发、测试可以围绕同一条需求完成范围、原型和验收口径对齐。";
+        }
+
         document.getElementById("feedback-list").innerHTML = data.feedback
-          .map((item) => `<div class="item"><strong>${item.role}</strong><p>“${item.text}”</p></div>`)
+          .map((item) => {
+            const score = Number(item.value || 4) + Number(item.urgency || 4) - Number(item.complexity || 2);
+            const priority = score >= 7 ? "P0" : score >= 5 ? "P1" : "P2";
+            return `<div class="item"><strong>${item.role} · ${priority}</strong><p>“${item.text}”</p><div class="pill-row"><span class="pill">${item.scenario || "续费分析"}</span><span class="pill">评分 ${score}</span></div></div>`;
+          })
           .join("");
         document.getElementById("feedback-tags").innerHTML = data.tags
           .map((tag) => `<span class="pill">${tag}</span>`)

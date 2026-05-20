@@ -94,6 +94,12 @@
         grid-template-columns: 1fr 1fr;
         gap: 18px;
       }
+      .report-grid {
+        display: grid;
+        grid-template-columns: 0.9fr 1.1fr;
+        gap: 18px;
+        margin-top: 18px;
+      }
       .panel { padding: 22px; }
       h2 { margin: 0 0 14px; }
       .checklist, .feedback {
@@ -130,6 +136,12 @@
         color: #0f4e43;
         font-size: 0.82rem;
         font-weight: 760;
+      }
+      .filters {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin: 0 0 14px;
       }
       .api-status {
         display: inline-flex;
@@ -180,8 +192,43 @@
         font-weight: 760;
         padding: 0 14px;
       }
+      button.secondary {
+        border-color: var(--line);
+        background: var(--panel);
+        color: var(--muted);
+      }
+      button.secondary[aria-pressed="true"] {
+        border-color: var(--accent);
+        background: var(--accent);
+        color: #fff;
+      }
+      .decision {
+        padding: 16px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #fbfcfb;
+      }
+      .decision strong {
+        display: block;
+        color: var(--accent);
+        font-size: 1.35rem;
+      }
+      .decision p,
+      pre {
+        margin: 8px 0 0;
+        color: var(--muted);
+      }
+      pre {
+        overflow: auto;
+        padding: 14px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #fbfcfb;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        font-size: 0.86rem;
+      }
       @media (max-width: 820px) {
-        .summary, .layout { grid-template-columns: 1fr; }
+        .summary, .layout, .report-grid { grid-template-columns: 1fr; }
         .topbar { align-items: flex-start; flex-direction: column; }
       }
     </style>
@@ -214,6 +261,12 @@
         </div>
         <div class="panel">
           <h2>反馈与迭代池</h2>
+          <div class="filters" aria-label="feedback filters">
+            <button class="secondary" type="button" data-filter="all" aria-pressed="true">全部</button>
+            <button class="secondary" type="button" data-filter="P0" aria-pressed="false">阻塞项</button>
+            <button class="secondary" type="button" data-filter="P1" aria-pressed="false">下一版</button>
+            <button class="secondary" type="button" data-filter="文档" aria-pressed="false">文档补充</button>
+          </div>
           <div class="feedback"></div>
           <form class="interaction-form" id="feedback-form">
             <h2>新增反馈</h2>
@@ -226,6 +279,20 @@
             </select>
             <button type="submit">提交到后端反馈池</button>
           </form>
+        </div>
+      </section>
+
+      <section class="report-grid" aria-label="release report">
+        <div class="panel">
+          <h2>发布决策</h2>
+          <div class="decision">
+            <strong data-decision>暂缓发布</strong>
+            <p data-decision-note>仍有未完成验收项或 P0 反馈，需要先完成修复。</p>
+          </div>
+        </div>
+        <div class="panel">
+          <h2>测试报告</h2>
+          <pre data-report>验收数据加载后自动生成测试报告。</pre>
         </div>
       </section>
     </main>
@@ -247,6 +314,7 @@
       };
 
       let acceptanceState = fallbackAcceptance;
+      let currentFilter = "all";
       const apiStatus = document.getElementById("api-status");
 
       const setApiStatus = (message) => {
@@ -265,12 +333,35 @@
           )
           .join("");
 
-        document.querySelector(".feedback").innerHTML = data.feedback
+        const visibleFeedback = data.feedback.filter((item) => {
+          if (currentFilter === "all") return true;
+          return item.status.includes(currentFilter);
+        });
+
+        document.querySelector(".feedback").innerHTML = visibleFeedback
           .map(
             (item) =>
               `<div class="feedback-item"><strong>${item.title}</strong><p>${item.note}</p><span class="status">${item.status}</span></div>`
           )
           .join("");
+        if (!visibleFeedback.length) {
+          document.querySelector(".feedback").innerHTML = '<div class="feedback-item"><strong>当前筛选无反馈</strong><p>可以切换筛选条件，或新增一条反馈。</p></div>';
+        }
+
+        const openChecks = data.checks.filter((item) => !item.done);
+        const p0Issues = data.feedback.filter((item) => item.status.includes("P0"));
+        const canRelease = openChecks.length === 0 && p0Issues.length === 0;
+        document.querySelector("[data-decision]").textContent = canRelease ? "可以发布" : "暂缓发布";
+        document.querySelector("[data-decision-note]").textContent = canRelease
+          ? "所有验收项已完成，且没有 P0 阻塞反馈，可以进入发布准备。"
+          : `仍有 ${openChecks.length} 个未完成验收项、${p0Issues.length} 个 P0 反馈，需要先处理。`;
+        document.querySelector("[data-report]").textContent = [
+          "本轮测试报告",
+          `验收通过：${data.summary.done}/${data.summary.total}`,
+          `未完成项：${openChecks.map((item) => item.text).join("；") || "无"}`,
+          `反馈数量：${data.feedback.length}`,
+          `发布结论：${canRelease ? "可以发布" : "暂缓发布"}`
+        ].join("\n");
 
         document.querySelectorAll("[data-check-id]").forEach((input) => {
           input.addEventListener("change", async () => {
@@ -302,6 +393,15 @@
           });
         });
       };
+
+      document.querySelectorAll("[data-filter]").forEach((button) => {
+        button.addEventListener("click", () => {
+          document.querySelectorAll("[data-filter]").forEach((item) => item.setAttribute("aria-pressed", "false"));
+          button.setAttribute("aria-pressed", "true");
+          currentFilter = button.dataset.filter;
+          renderAcceptance(acceptanceState);
+        });
+      });
 
       document.getElementById("feedback-form").addEventListener("submit", async (event) => {
         event.preventDefault();

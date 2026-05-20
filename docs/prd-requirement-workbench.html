@@ -33,6 +33,7 @@
         <a href="#prototype">Axure</a>
         <a href="#api">接口</a>
         <a href="#acceptance">验收</a>
+        <a href="#enhance">增强版</a>
         <a href="#deploy">测试部署</a>
       </nav>
       <div class="doc-grid">
@@ -43,7 +44,8 @@
         <section id="prototype"><h2>5. Axure 原型设计</h2><div class="flow"><div><span>01</span><strong>反馈池</strong><p>角色、反馈内容、新增反馈表单。</p></div><div><span>02</span><strong>PRD Tab</strong><p>功能范围、流程设计、验收标准。</p></div><div><span>03</span><strong>新增反馈</strong><p>提交后刷新反馈池。</p></div><div><span>04</span><strong>验收勾选</strong><p>勾选后显示状态变化。</p></div><div><span>05</span><strong>状态提示</strong><p>展示后端加载和写入结果。</p></div></div></section>
         <section id="api"><h2>6. 数据与接口</h2><div class="api-grid"><div class="api-card"><span class="method">GET</span><code>/api/prd</code><p>返回客户反馈、标签、PRD 分区和验收标准。</p></div><div class="api-card"><span class="method">POST</span><code>/api/prd/feedback</code><p>提交 role 和 text，新增客户反馈。</p></div><div class="api-card"><span class="method">PATCH</span><code>/api/prd/acceptance</code><p>提交 id 和 done，更新验收项状态。</p></div></div></section>
         <section id="acceptance"><h2>7. 验收标准</h2><ul class="criteria"><li>页面打开后可以从后端加载 PRD 数据。</li><li>新增反馈后，反馈池新增一条记录。</li><li>勾选验收项后，状态能在后端内存中保留。</li><li>后端不可用时，页面仍能展示静态 fallback 内容。</li><li>移动端下反馈池和 PRD 摘要上下排列。</li></ul></section>
-        <section id="deploy"><h2>8. 测试与部署</h2><p>本地 Node 服务端口为 4173。主要测试覆盖 GET 数据加载、POST 反馈新增、PATCH 验收状态更新。部署方式为本地静态页面 + Node HTTP API，无需构建工具。</p></section>
+        <section id="enhance"><h2>8. 增强版功能说明</h2><h3>任务流</h3><ul><li>查看反馈池并识别角色、场景、痛点。</li><li>录入业务场景、业务价值、紧急程度、实现复杂度。</li><li>系统根据评分生成 P0 / P1 / P2 优先级。</li><li>同步刷新用户故事、版本计划、风险提示和 PRD 完整度。</li></ul><h3>新增字段</h3><div class="api-grid"><div class="api-card"><span class="method">FIELD</span><code>scenario</code><p>业务场景，如续费分析、异常识别、报表导出。</p></div><div class="api-card"><span class="method">FIELD</span><code>value / urgency / complexity</code><p>用于计算需求优先级。</p></div><div class="api-card"><span class="method">RULE</span><code>value + urgency - complexity</code><p>分数大于等于 7 为 P0，5-6 为 P1，其余为 P2。</p></div></div></section>
+        <section id="deploy"><h2>9. 测试与部署</h2><p>本地 Node 服务端口为 4173。主要测试覆盖 GET 数据加载、POST 反馈新增、PATCH 验收状态更新。部署方式为本地静态页面 + Node HTTP API，无需构建工具。</p></section>
       </div>
     </main>
   </body>
